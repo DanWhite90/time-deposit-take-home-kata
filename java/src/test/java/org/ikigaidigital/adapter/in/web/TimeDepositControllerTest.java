@@ -5,11 +5,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
-import org.ikigaidigital.adapter.out.persistence.InMemoryTimeDepositStore;
-import org.ikigaidigital.domain.model.TimeDepositWithWithdrawals;
-import org.ikigaidigital.domain.model.Withdrawal;
+import org.ikigaidigital.PostgresTestcontainersConfiguration;
+import org.ikigaidigital.adapter.out.persistence.TimeDepositEntity;
+import org.ikigaidigital.adapter.out.persistence.TimeDepositJpaRepository;
+import org.ikigaidigital.adapter.out.persistence.WithdrawalEntity;
+import org.ikigaidigital.adapter.out.persistence.WithdrawalJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -17,10 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Import(PostgresTestcontainersConfiguration.class)
 @DisplayName("TimeDepositController")
 class TimeDepositControllerTest {
 
@@ -28,18 +32,19 @@ class TimeDepositControllerTest {
   private MockMvc mockMvc;
 
   @Autowired
-  private InMemoryTimeDepositStore timeDepositStore;
+  private TimeDepositJpaRepository timeDeposits;
+
+  @Autowired
+  private WithdrawalJpaRepository withdrawals;
 
   @BeforeEach
   void seedStore() {
-    timeDepositStore.clear();
-    timeDepositStore.add(new TimeDepositWithWithdrawals(
-        1,
-        "basic",
-        1234567.00,
-        45,
-        List.of(new Withdrawal(9, 1, 25.5, LocalDate.of(2026, 1, 15)))));
-    timeDepositStore.add(new TimeDepositWithWithdrawals(2, "basic", 500.00, 30, List.of()));
+    withdrawals.deleteAll();
+    timeDeposits.deleteAll();
+    TimeDepositEntity basic = timeDeposits.save(
+        new TimeDepositEntity(1, "basic", 45, new BigDecimal("1234567.00")));
+    withdrawals.save(new WithdrawalEntity(9, basic, new BigDecimal("25.50"), LocalDate.of(2026, 1, 15)));
+    timeDeposits.save(new TimeDepositEntity(2, "basic", 30, new BigDecimal("500.00")));
   }
 
   @Nested

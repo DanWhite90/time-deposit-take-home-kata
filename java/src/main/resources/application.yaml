@@ -1,6 +1,19 @@
 spring:
   application:
     name: time-deposit-kata
+  datasource:
+    url: jdbc:postgresql://localhost:5432/time_deposit
+    username: postgres
+    password: postgres
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        # Keep the assignment's camelCase names. PostgreSQL would otherwise fold them.
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate.globally_quoted_identifiers: true
 
 # Springdoc builds the OpenAPI document from the controller annotations.
 springdoc:
