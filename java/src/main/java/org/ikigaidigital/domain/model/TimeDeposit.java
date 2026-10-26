@@ -1,4 +1,4 @@
-package org.ikigaidigital;
+package org.ikigaidigital.domain.model;
 
 public class TimeDeposit {
 

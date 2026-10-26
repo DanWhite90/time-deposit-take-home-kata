@@ -1,11 +1,14 @@
-package org.ikigaidigital;
+package org.ikigaidigital.application.service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import org.ikigaidigital.application.port.in.UpdateTimeDepositBalanceUseCase;
+import org.ikigaidigital.domain.model.TimeDeposit;
 
-public class TimeDepositCalculator {
+public class TimeDepositCalculator implements UpdateTimeDepositBalanceUseCase {
 
+  @Override
   public void updateBalance(List<TimeDeposit> xs) {
     for (int i = 0; i < xs.size(); i++) {
       double interest = 0;

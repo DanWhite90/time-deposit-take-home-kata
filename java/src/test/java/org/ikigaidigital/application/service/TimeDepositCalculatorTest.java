@@ -1,8 +1,9 @@
-package org.ikigaidigital;
+package org.ikigaidigital.application.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
+import org.ikigaidigital.domain.model.TimeDeposit;
 import org.junit.jupiter.api.Test;
 
 public class TimeDepositCalculatorTest {
