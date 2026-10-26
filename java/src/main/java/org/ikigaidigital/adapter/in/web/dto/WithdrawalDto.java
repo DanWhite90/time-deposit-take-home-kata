@@ -5,14 +5,14 @@ import java.time.LocalDate;
 import org.ikigaidigital.domain.model.Withdrawal;
 
 @Schema(name = "Withdrawal")
-public record WithdrawalResponse(
+public record WithdrawalDto(
     @Schema(example = "9") int id,
     @Schema(example = "1") int timeDepositId,
     @Schema(example = "25.5") Double amount,
     @Schema(format = "date", example = "2026-01-15") LocalDate date) {
 
-  static WithdrawalResponse from(Withdrawal withdrawal) {
-    return new WithdrawalResponse(
+  static WithdrawalDto from(Withdrawal withdrawal) {
+    return new WithdrawalDto(
         withdrawal.id(),
         withdrawal.timeDepositId(),
         withdrawal.amount(),
