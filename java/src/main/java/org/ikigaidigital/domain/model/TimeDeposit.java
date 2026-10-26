@@ -1,36 +1,24 @@
 package org.ikigaidigital.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+
+/* Cleanup using lombok instead of records only to not introduce breaking changes, as per requirement of the
+assignment under the assumption the class is to be considered a shared model across repos and services. Ideally I would
+have made it immutable with builder() and toBuilder() logic. */
+@Getter
+@AllArgsConstructor
 public class TimeDeposit {
 
   private int id;
+
   private String planType;
+
+  @Setter
   private Double balance;
+
   private int days;
 
-  public TimeDeposit(int id, String planType, Double balance, int days) {
-    this.id = id;
-    this.planType = planType;
-    this.balance = balance;
-    this.days = days;
-  }
-
-  public int getId() {
-    return id;
-  }
-
-  public String getPlanType() {
-    return planType;
-  }
-
-  public Double getBalance() {
-    return balance;
-  }
-
-  public int getDays() {
-    return days;
-  }
-
-  public void setBalance(Double balance) {
-    this.balance = balance;
-  }
 }

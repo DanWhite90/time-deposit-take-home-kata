@@ -1,7 +1,8 @@
-package org.ikigaidigital.infrastructure;
+package org.ikigaidigital.config;
 
 import org.ikigaidigital.application.port.in.UpdateTimeDepositBalanceUseCase;
 import org.ikigaidigital.application.service.TimeDepositCalculator;
+import org.ikigaidigital.application.service.interest.InterestRateStrategyFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,7 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class UseCaseConfiguration {
 
   @Bean
-  UpdateTimeDepositBalanceUseCase updateTimeDepositBalanceUseCase() {
-    return new TimeDepositCalculator();
+  UpdateTimeDepositBalanceUseCase updateTimeDepositBalanceUseCase(
+      InterestRateStrategyFactory interestRateStrategyFactory) {
+    return new TimeDepositCalculator(interestRateStrategyFactory);
   }
 }
