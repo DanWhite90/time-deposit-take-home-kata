@@ -41,8 +41,10 @@ class TimeDepositControllerTest {
   void seedStore() {
     withdrawals.deleteAll();
     timeDeposits.deleteAll();
+
     TimeDepositEntity basic = timeDeposits.save(
         new TimeDepositEntity(1, "basic", 45, new BigDecimal("1234567.00")));
+
     withdrawals.save(new WithdrawalEntity(9, basic, new BigDecimal("25.50"), LocalDate.of(2026, 1, 15)));
     timeDeposits.save(new TimeDepositEntity(2, "basic", 30, new BigDecimal("500.00")));
   }

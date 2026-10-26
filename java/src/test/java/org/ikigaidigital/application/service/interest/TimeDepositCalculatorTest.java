@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.ikigaidigital.domain.model.TimeDeposit;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -16,19 +17,23 @@ public class TimeDepositCalculatorTest {
 
   private final TimeDepositCalculator calculator = new TimeDepositCalculator(new InterestRateStrategyFactory());
 
-  @ParameterizedTest(name = "{0} at {1} days with balance {2} becomes {3}")
-  @MethodSource("provideInputDepositsAndExpectedBalances")
-  @DisplayName("Calculates correct new balance for given plan type and days")
-  void updateBalance_roundsEachStrategy(String planType, int days, double balance, double expectedBalance) {
-    TimeDeposit deposit = new TimeDeposit(1, planType, balance, days);
+  @Nested
+  @DisplayName("updateBalance()")
+  class UpdateBalance {
 
-    calculator.updateBalance(List.of(deposit));
+    @ParameterizedTest(name = "{0} at {1} days with balance {2} becomes {3}")
+    @MethodSource("provideInputDepositsAndExpectedBalances")
+    @DisplayName("Calculates correct new balance for given plan type and days")
+    void updateBalance_roundsEachStrategy(String planType, int days, double balance, double expectedBalance) {
+      TimeDeposit deposit = new TimeDeposit(1, planType, balance, days);
 
-    assertThat(deposit.getBalance()).isEqualTo(expectedBalance);
-  }
+      calculator.updateBalance(List.of(deposit));
 
-  private static Stream<Arguments> provideInputDepositsAndExpectedBalances() {
-    return Stream.of(
+      assertThat(deposit.getBalance()).isEqualTo(expectedBalance);
+    }
+
+    private static Stream<Arguments> provideInputDepositsAndExpectedBalances() {
+      return Stream.of(
         arguments("basic", 30, 1200.0, 1200.0),
         arguments("basic", 31, 1200.0, 1201.0),
         arguments("basic", 45, 1234567.0, 1235595.81),
@@ -43,6 +48,7 @@ public class TimeDepositCalculatorTest {
         arguments("premium", 366, 1200.0, 1205.0),
         arguments("unknown", 100, 1200.0, 1200.0),
         arguments(null, 100, 1200.0, 1200.0));
+    }
   }
 
 }

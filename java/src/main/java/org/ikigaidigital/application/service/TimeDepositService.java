@@ -10,6 +10,7 @@ import org.ikigaidigital.application.port.out.TimeDepositStore;
 import org.ikigaidigital.domain.model.TimeDeposit;
 import org.ikigaidigital.domain.model.TimeDepositWithWithdrawals;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +21,14 @@ public class TimeDepositService implements ListTimeDepositsUseCase, UpdateAllTim
   private final UpdateTimeDepositBalanceUseCase updateTimeDepositBalanceUseCase;
 
   @Override
+  @Transactional(readOnly = true)
   public List<TimeDepositWithWithdrawals> listTimeDeposits() {
     return timeDepositStore.findAll();
   }
 
   // TODO: need review
   @Override
+  @Transactional
   public List<TimeDepositWithWithdrawals> updateAllBalances() {
     List<TimeDeposit> deposits = new ArrayList<>();
 

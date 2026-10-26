@@ -9,6 +9,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +17,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "withdrawals")
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class WithdrawalEntity {
 
   @Id
@@ -30,11 +32,4 @@ public class WithdrawalEntity {
 
   @Column(nullable = false)
   private LocalDate date;
-
-  public WithdrawalEntity(Integer id, TimeDepositEntity timeDeposit, BigDecimal amount, LocalDate date) {
-    this.id = id;
-    this.timeDeposit = timeDeposit;
-    this.amount = amount;
-    this.date = date;
-  }
 }

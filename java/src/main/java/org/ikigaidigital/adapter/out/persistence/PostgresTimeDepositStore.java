@@ -9,7 +9,6 @@ import org.ikigaidigital.domain.model.TimeDeposit;
 import org.ikigaidigital.domain.model.TimeDepositWithWithdrawals;
 import org.ikigaidigital.domain.model.Withdrawal;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -18,13 +17,11 @@ public class PostgresTimeDepositStore implements TimeDepositStore {
   private final TimeDepositJpaRepository timeDeposits;
 
   @Override
-  @Transactional(readOnly = true)
   public List<TimeDepositWithWithdrawals> findAll() {
     return timeDeposits.findAllWithWithdrawals().stream().map(this::toDomain).toList();
   }
 
   @Override
-  @Transactional
   public void saveBalances(List<TimeDeposit> deposits) {
     for (TimeDeposit deposit : deposits) {
       timeDeposits.updateBalance(deposit.getId(), money(deposit.getBalance()));
@@ -39,6 +36,7 @@ public class PostgresTimeDepositStore implements TimeDepositStore {
             withdrawal.getAmount().doubleValue(),
             withdrawal.getDate()))
         .toList();
+
     return new TimeDepositWithWithdrawals(
         deposit.getId(),
         deposit.getPlanType(),

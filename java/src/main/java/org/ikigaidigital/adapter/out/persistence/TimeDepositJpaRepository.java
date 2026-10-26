@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface TimeDepositJpaRepository extends JpaRepository<TimeDepositEntity, Integer> {
 
@@ -18,6 +19,7 @@ public interface TimeDepositJpaRepository extends JpaRepository<TimeDepositEntit
   List<TimeDepositEntity> findAllWithWithdrawals();
 
   @Modifying(clearAutomatically = true, flushAutomatically = true)
+  @Transactional
   @Query("update TimeDepositEntity deposit set deposit.balance = :balance where deposit.id = :id")
   void updateBalance(@Param("id") Integer id, @Param("balance") BigDecimal balance);
 }
