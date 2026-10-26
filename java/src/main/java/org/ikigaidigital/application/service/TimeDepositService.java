@@ -26,7 +26,6 @@ public class TimeDepositService implements ListTimeDepositsUseCase, UpdateAllTim
     return timeDepositStore.findAll();
   }
 
-  // TODO: need review
   @Override
   @Transactional
   public List<TimeDepositWithWithdrawals> updateAllBalances() {
