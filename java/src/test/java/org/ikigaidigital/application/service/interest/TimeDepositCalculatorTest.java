@@ -17,7 +17,7 @@ public class TimeDepositCalculatorTest {
   private final TimeDepositCalculator calculator = new TimeDepositCalculator(new InterestRateStrategyFactory());
 
   @ParameterizedTest(name = "{0} at {1} days with balance {2} becomes {3}")
-  @MethodSource("provideRoundedBalances")
+  @MethodSource("provideInputDepositsAndExpectedBalances")
   @DisplayName("Calculates correct new balance for given plan type and days")
   void updateBalance_roundsEachStrategy(String planType, int days, double balance, double expectedBalance) {
     TimeDeposit deposit = new TimeDeposit(1, planType, balance, days);
@@ -27,7 +27,7 @@ public class TimeDepositCalculatorTest {
     assertThat(deposit.getBalance()).isEqualTo(expectedBalance);
   }
 
-  private static Stream<Arguments> provideRoundedBalances() {
+  private static Stream<Arguments> provideInputDepositsAndExpectedBalances() {
     return Stream.of(
         arguments("basic", 30, 1200.0, 1200.0),
         arguments("basic", 31, 1200.0, 1201.0),
