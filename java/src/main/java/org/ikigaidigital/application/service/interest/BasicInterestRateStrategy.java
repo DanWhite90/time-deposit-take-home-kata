@@ -5,11 +5,13 @@ import org.ikigaidigital.domain.model.TimeDeposit;
 final class BasicInterestRateStrategy implements InterestRateStrategy {
 
   @Override
-  public double interest(TimeDeposit deposit) {
+  public double interest(final TimeDeposit deposit) {
     double interest = 0;
+
     if (deposit.getDays() > 30) {
-      interest += deposit.getBalance() * 0.01 / 12;
+      interest = deposit.getBalance() * 0.01 / 12;
     }
+
     return interest;
   }
 }

@@ -1,4 +1,4 @@
-package org.ikigaidigital.application.service;
+package org.ikigaidigital.application.service.interest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -6,7 +6,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
 import java.util.stream.Stream;
-import org.ikigaidigital.application.service.interest.InterestRateStrategyFactory;
 import org.ikigaidigital.domain.model.TimeDeposit;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -16,16 +15,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class TimeDepositCalculatorTest {
 
   private final TimeDepositCalculator calculator = new TimeDepositCalculator(new InterestRateStrategyFactory());
-
-  @Test
-  public void updateBalance_Test() {
-    List<TimeDeposit> plans = List.of(
-        new TimeDeposit(1, "basic", 1234567.00, 45)
-    );
-    calculator.updateBalance(plans);
-
-    assertThat(1).isEqualTo(1);
-  }
 
   @ParameterizedTest(name = "{0} at {1} days with balance {2} becomes {3}")
   @MethodSource("roundedBalances")
@@ -62,7 +51,7 @@ public class TimeDepositCalculatorTest {
 
     assertThat(beforeInterestStarts.getBalance()).isEqualTo(1000.0);
     assertThatThrownBy(() -> calculator.updateBalance(
-            List.of(new TimeDeposit(2, null, 1000.0, 31))))
+        List.of(new TimeDeposit(2, null, 1000.0, 31))))
         .isInstanceOf(NullPointerException.class);
   }
 }

@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class TimeDepositBalanceService implements ListTimeDepositsUseCase, UpdateAllTimeDepositBalancesUseCase {
+public class TimeDepositService implements ListTimeDepositsUseCase, UpdateAllTimeDepositBalancesUseCase {
 
   private final TimeDepositStore timeDepositStore;
+
   private final UpdateTimeDepositBalanceUseCase updateTimeDepositBalanceUseCase;
 
   @Override

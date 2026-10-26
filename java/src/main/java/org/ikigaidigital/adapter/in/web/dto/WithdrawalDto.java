@@ -11,7 +11,7 @@ public record WithdrawalDto(
     @Schema(example = "25.5") Double amount,
     @Schema(format = "date", example = "2026-01-15") LocalDate date) {
 
-  static WithdrawalDto from(Withdrawal withdrawal) {
+  static WithdrawalDto from(final Withdrawal withdrawal) {
     return new WithdrawalDto(
         withdrawal.id(),
         withdrawal.timeDepositId(),

@@ -12,7 +12,7 @@ public record TimeDepositDto(
     @Schema(example = "45") int days,
     List<WithdrawalDto> withdrawals) {
 
-  public static TimeDepositDto from(TimeDepositWithWithdrawals deposit) {
+  public static TimeDepositDto from(final TimeDepositWithWithdrawals deposit) {
     return new TimeDepositDto(
         deposit.id(),
         deposit.planType(),

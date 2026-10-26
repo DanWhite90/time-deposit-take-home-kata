@@ -10,12 +10,12 @@ public final class InterestRateStrategyFactory {
   private final InterestRateStrategy premium = new PremiumInterestRateStrategy();
   private final InterestRateStrategy noOp = new NoOpInterestRateStrategy();
 
-  public InterestRateStrategy forPlanType(String planType) {
+  public InterestRateStrategy forPlanType(final String planType) {
     return switch (planType) {
       case "basic" -> basic;
       case "student" -> student;
       case "premium" -> premium;
-      default -> noOp;
+      case null, default -> noOp;
     };
   }
 }
