@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.ikigaidigital.adapter.in.web.dto.TimeDepositDto;
 import org.ikigaidigital.application.port.in.ListTimeDepositsUseCase;
 import org.ikigaidigital.application.port.in.UpdateAllTimeDepositBalancesUseCase;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Inbound adapter for listing time deposits and updating their balances.
  */
+@Slf4j
 @RestController
 @RequestMapping(path = "/time-deposits", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "time-deposits", description = "Retrieve time deposits and update their balances")
@@ -37,6 +39,8 @@ public class TimeDepositController {
       description = "Every time deposit, including its withdrawals",
       content = @Content(array = @ArraySchema(schema = @Schema(implementation = TimeDepositDto.class))))
   public List<TimeDepositDto> listTimeDeposits() {
+    log.info("listTimeDeposits called");
+
     return listTimeDepositsUseCase.listTimeDeposits().stream()
         .map(TimeDepositDto::from)
         .toList();
@@ -54,6 +58,8 @@ public class TimeDepositController {
       description = "Time deposits after balances were updated",
       content = @Content(array = @ArraySchema(schema = @Schema(implementation = TimeDepositDto.class))))
   public List<TimeDepositDto> updateTimeDepositBalances() {
+    log.info("updateTimeDepositBalances called");
+
     return updateAllTimeDepositBalancesUseCase.updateAllBalances().stream()
         .map(TimeDepositDto::from)
         .toList();
