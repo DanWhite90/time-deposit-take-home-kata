@@ -1,5 +1,7 @@
 package org.ikigaidigital.domain.model;
 
+import static java.util.Collections.emptyList;
+
 import java.util.List;
 
 public record TimeDepositWithWithdrawals(
@@ -10,7 +12,7 @@ public record TimeDepositWithWithdrawals(
     List<Withdrawal> withdrawals) {
 
   public TimeDepositWithWithdrawals {
-    withdrawals = withdrawals == null ? List.of() : List.copyOf(withdrawals);
+    withdrawals = withdrawals == null ? emptyList() : List.copyOf(withdrawals);
   }
 
   public TimeDeposit toTimeDeposit() {
