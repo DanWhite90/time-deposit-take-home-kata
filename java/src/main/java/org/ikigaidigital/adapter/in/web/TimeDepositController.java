@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Inbound adapter for the two operations in {@code /openapi/time-deposit-api.yaml}.
+ * Inbound adapter for listing time deposits and updating their balances.
  */
 @RestController
 @RequestMapping(path = "/time-deposits", produces = MediaType.APPLICATION_JSON_VALUE)

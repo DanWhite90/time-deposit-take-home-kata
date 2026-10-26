@@ -2,11 +2,10 @@ spring:
   application:
     name: time-deposit-kata
 
-# Swagger UI shows the checked-in contract, which is the source of truth for the two endpoints.
+# Springdoc builds the OpenAPI document from the controller annotations.
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
-    url: /openapi/time-deposit-api.yaml
   paths-to-match:
     - /time-deposits
     - /time-deposits/balances
