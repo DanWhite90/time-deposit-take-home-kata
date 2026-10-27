@@ -47,13 +47,13 @@ public class TimeDepositController {
         .toList();
   }
 
-  /* This is a non-idempotent operation, it assumes the endpoint is called once monthly as a background job. Also
-  there is an implicit assumption that some other job will advance days, as there's no mechanism to enforce the
-  correct timing of the interest calculation. Nothing changes the `days` variable. Furthermore, there's also no way
-  of computing a fraction of the interest because ideally the TimeDeposit class should have stored the date of the
-  deposit and the interest calculation job should have considered the current day's excess from the deposit day +
-  interest strategy days gap, to calculate the correct fraction of interest for the month when the interest triggers
-  within a month and only a partial month is paid.
+  /* This is a non-idempotent operation, it assumes the endpoint is called once monthly as a background job. No
+  batching for scaling is considered. Also, there is an implicit assumption that some other job will advance days, as
+  there's no mechanism to enforce the correct timing of the interest calculation. Nothing changes the `days` variable.
+  Furthermore, there's also no way of computing a fraction of the interest because ideally the TimeDeposit class
+  should have stored the date of the deposit and the interest calculation job should have considered the current
+  day's excess from the deposit day + interest strategy days gap, to calculate the correct fraction of interest for
+  the month when the interest triggers within a month and only a partial month is paid.
    */
   @PostMapping("/balances")
   @Operation(
