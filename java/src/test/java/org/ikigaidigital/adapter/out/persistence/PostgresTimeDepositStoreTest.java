@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.TestConstructor.AutowireMode;
+import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest
 @Import(PostgresTestcontainersConfiguration.class)
@@ -30,6 +31,8 @@ class PostgresTimeDepositStoreTest {
   private final TimeDepositJpaRepository timeDeposits;
 
   private final WithdrawalJpaRepository withdrawals;
+
+  private final TransactionTemplate transactionTemplate;
 
   @BeforeEach
   void clearTables() {
@@ -76,7 +79,9 @@ class PostgresTimeDepositStoreTest {
 
       withdrawals.save(new WithdrawalEntity(4, deposit, new BigDecimal("10.00"), LocalDate.of(2026, 3, 1)));
 
-      timeDepositStore.saveBalances(List.of(new TimeDeposit(1, "basic", 1001.0, 45)));
+      // In production the store joins the service transaction; the template plays that role here.
+      transactionTemplate.executeWithoutResult(
+          status -> timeDepositStore.saveBalances(List.of(new TimeDeposit(1, "basic", 1001.0, 45))));
 
       assertThat(timeDepositStore.findAll()).singleElement().satisfies(loaded -> {
         assertThat(loaded.balance()).isEqualByComparingTo("1001.00");

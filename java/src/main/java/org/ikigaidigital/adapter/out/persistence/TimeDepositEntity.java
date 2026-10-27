@@ -9,30 +9,38 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
+// Persistent fields are not final: JPA forbids it and newer JDKs block reflective writes to final fields.
 @Entity
 @Table(name = "timeDeposits")
 @Getter
-@NoArgsConstructor(force = true)
-@RequiredArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class TimeDepositEntity {
 
   @Id
-  private final Integer id;
+  private Integer id;
 
   @Column(name = "planType", nullable = false)
-  private final String planType;
+  private String planType;
 
   @Column(nullable = false)
-  private final Integer days;
+  private Integer days;
 
   @Column(nullable = false, precision = 19, scale = 2)
-  private final BigDecimal balance;
+  private BigDecimal balance;
 
   @OneToMany(mappedBy = "timeDeposit")
   @OrderBy("id")
   private List<WithdrawalEntity> withdrawals = new ArrayList<>();
+
+  // Explicit because Lombok cannot generate a constructor that leaves out the withdrawals collection.
+  public TimeDepositEntity(final Integer id, final String planType, final Integer days, final BigDecimal balance) {
+    this.id = id;
+    this.planType = planType;
+    this.days = days;
+    this.balance = balance;
+  }
 }
