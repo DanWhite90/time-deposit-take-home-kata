@@ -1,5 +1,4 @@
--- Quoted identifiers keep the assignment's camelCase names. Unquoted
--- identifiers are folded to lowercase by PostgreSQL.
+-- camelCase names are kept as per the assignment requirements
 CREATE TABLE "timeDeposits" (
     id INTEGER PRIMARY KEY,
     "planType" VARCHAR(255) NOT NULL,

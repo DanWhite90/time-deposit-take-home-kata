@@ -1,6 +1,7 @@
 package org.ikigaidigital.adapter.out.persistence;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -64,6 +65,25 @@ class TimeDepositPersistenceAdapterTest {
           assertThat(withdrawal.date()).isEqualTo(LocalDate.of(2026, 3, 1));
         });
       });
+    }
+  }
+
+  @Nested
+  @DisplayName("findAllTimeDeposits()")
+  class FindAllTimeDeposits {
+
+    @Test
+    @DisplayName("returns plans ordered by id as the calculator model")
+    void findAllTimeDepositsReturnsPlansOrderedById() {
+      final TimeDepositEntity deposit = timeDeposits.save(
+          new TimeDepositEntity(2, "premium", 46, new BigDecimal("1200.00")));
+
+      timeDeposits.save(new TimeDepositEntity(1, "basic", 31, new BigDecimal("999.99")));
+      withdrawals.save(new WithdrawalEntity(4, deposit, new BigDecimal("10.00"), LocalDate.of(2026, 3, 1)));
+
+      assertThat(timeDepositStore.findAllTimeDeposits())
+          .extracting(TimeDeposit::getId, TimeDeposit::getPlanType, TimeDeposit::getBalance, TimeDeposit::getDays)
+          .containsExactly(tuple(1, "basic", 999.99, 31), tuple(2, "premium", 1200.0, 46));
     }
   }
 

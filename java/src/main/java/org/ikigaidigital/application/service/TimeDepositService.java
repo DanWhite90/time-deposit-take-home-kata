@@ -1,6 +1,5 @@
 package org.ikigaidigital.application.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.ikigaidigital.TimeDeposit;
@@ -29,11 +28,7 @@ public class TimeDepositService implements ListTimeDepositsUseCase, UpdateAllTim
   @Override
   @Transactional
   public List<TimeDepositWithWithdrawals> updateAllBalances() {
-    final List<TimeDeposit> deposits = new ArrayList<>();
-
-    for (final TimeDepositWithWithdrawals account : timeDepositStore.findAll()) {
-      deposits.add(account.toTimeDeposit());
-    }
+    final List<TimeDeposit> deposits = timeDepositStore.findAllTimeDeposits();
 
     timeDepositCalculator.updateBalance(deposits);
     timeDepositStore.saveBalances(deposits);

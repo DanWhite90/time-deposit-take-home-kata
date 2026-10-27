@@ -8,5 +8,8 @@ public interface TimeDepositStore {
 
   List<TimeDepositWithWithdrawals> findAll();
 
+  // Without withdrawals: the interest calculation ignores them, so they are not loaded.
+  List<TimeDeposit> findAllTimeDeposits();
+
   void saveBalances(List<TimeDeposit> deposits);
 }
