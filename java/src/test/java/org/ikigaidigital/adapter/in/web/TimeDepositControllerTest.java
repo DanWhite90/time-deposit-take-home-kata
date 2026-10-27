@@ -1,5 +1,6 @@
 package org.ikigaidigital.adapter.in.web;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,6 +29,22 @@ import org.springframework.test.web.servlet.MockMvc;
 @RequiredArgsConstructor
 class TimeDepositControllerTest {
 
+  private static final String API_DOCS = "/v3/api-docs";
+
+  private static final String LIST_OPERATION = "$.paths['/time-deposits'].get";
+
+  private static final String UPDATE_OPERATION = "$.paths['/time-deposits/balances'].post";
+
+  private static final String OK_ITEMS_REF = ".responses['200'].content['application/json'].schema.items['$ref']";
+
+  private static final String TIME_DEPOSIT_SCHEMA = "$.components.schemas.TimeDeposit";
+
+  private static final String WITHDRAWAL_SCHEMA = "$.components.schemas.Withdrawal";
+
+  private static final String TIME_DEPOSIT_REF = "#/components/schemas/TimeDeposit";
+
+  private static final String WITHDRAWAL_REF = "#/components/schemas/Withdrawal";
+
   private final MockMvc mockMvc;
 
   private final TimeDepositTestData testData;
@@ -45,8 +62,8 @@ class TimeDepositControllerTest {
   class ListTimeDeposits {
 
     @Test
-    @DisplayName("list time deposits response matches OpenAPI schema")
-    void listTimeDepositsMatchesTheOpenApiSchema() throws Exception {
+    @DisplayName("returns every plan with its withdrawals")
+    void listTimeDepositsReturnsEveryPlanWithItsWithdrawals() throws Exception {
       mockMvc.perform(get("/time-deposits"))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$[0].id").value(1))
@@ -67,8 +84,8 @@ class TimeDepositControllerTest {
   class UpdateTimeDepositBalances {
 
     @Test
-    @DisplayName("updating balances response matches OpenAPI schema")
-    void updateTimeDepositBalancesAppliesInterestAndReturnsTheSameSchema() throws Exception {
+    @DisplayName("applies one month of interest and returns the updated plans")
+    void updateTimeDepositBalancesAppliesInterestAndReturnsTheUpdatedPlans() throws Exception {
       mockMvc.perform(post("/time-deposits/balances"))
           .andExpect(status().isOk())
           .andExpect(jsonPath("$[0].id").value(1))
@@ -80,6 +97,28 @@ class TimeDepositControllerTest {
           .andExpect(jsonPath("$[1].id").value(2))
           .andExpect(jsonPath("$[1].balance").value(500.00))
           .andExpect(jsonPath("$[1].days").value(30));
+    }
+  }
+
+  @Nested
+  @DisplayName("OpenAPI document")
+  class OpenApiDocument {
+
+    @Test
+    @DisplayName("describes both endpoints with the TimeDeposit and Withdrawal schemas")
+    void openApiDocumentDescribesBothEndpointsAndSchemas() throws Exception {
+      mockMvc.perform(get(API_DOCS))
+          .andExpect(status().isOk())
+          .andExpect(jsonPath(LIST_OPERATION + ".operationId").value("listTimeDeposits"))
+          .andExpect(jsonPath(LIST_OPERATION + OK_ITEMS_REF).value(TIME_DEPOSIT_REF))
+          .andExpect(jsonPath(UPDATE_OPERATION + ".operationId").value("updateTimeDepositBalances"))
+          .andExpect(jsonPath(UPDATE_OPERATION + OK_ITEMS_REF).value(TIME_DEPOSIT_REF))
+          .andExpect(jsonPath(TIME_DEPOSIT_SCHEMA + ".required").value(
+              containsInAnyOrder("id", "planType", "balance", "days", "withdrawals")))
+          .andExpect(jsonPath(TIME_DEPOSIT_SCHEMA + ".properties.balance.type").value("number"))
+          .andExpect(jsonPath(TIME_DEPOSIT_SCHEMA + ".properties.withdrawals.items['$ref']").value(WITHDRAWAL_REF))
+          .andExpect(jsonPath(WITHDRAWAL_SCHEMA + ".properties.amount.type").value("number"))
+          .andExpect(jsonPath(WITHDRAWAL_SCHEMA + ".properties.date.format").value("date"));
     }
   }
 }
