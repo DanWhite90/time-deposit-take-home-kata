@@ -1,4 +1,4 @@
-package org.ikigaidigital.application.service.interest;
+package org.ikigaidigital.domain.interest;
 
 import java.math.BigDecimal;
 import org.ikigaidigital.TimeDeposit;

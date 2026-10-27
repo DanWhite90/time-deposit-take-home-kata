@@ -5,16 +5,14 @@ import static org.ikigaidigital.domain.util.MoneyUtil.round;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ikigaidigital.application.service.interest.InterestRateStrategyFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.ikigaidigital.domain.interest.InterestRateStrategyFactory;
 
 /**
  * Original kata entry point. Its package, public no-arg constructor and {@code updateBalance} signature stay unchanged
- * so existing callers keep compiling. The plan rules moved into interest rate strategies.
+ * so existing callers keep compiling. The plan rules moved into interest rate strategies. It has no Spring dependency;
+ * {@link org.ikigaidigital.config.DomainConfiguration} registers it as a bean.
  */
-@Component
-@RequiredArgsConstructor(onConstructor_ = @Autowired)
+@RequiredArgsConstructor
 public class TimeDepositCalculator {
 
   private final InterestRateStrategyFactory interestRateStrategyFactory;

@@ -1,8 +1,5 @@
-package org.ikigaidigital.application.service.interest;
+package org.ikigaidigital.domain.interest;
 
-import org.springframework.stereotype.Component;
-
-@Component
 public final class InterestRateStrategyFactory {
 
   private final InterestRateStrategy basic = new BasicInterestRateStrategy();

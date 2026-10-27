@@ -1,4 +1,4 @@
-package org.ikigaidigital.application.service.interest;
+package org.ikigaidigital.domain.interest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -12,10 +12,10 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-@DisplayName("StudentInterestRateStrategy")
-class StudentInterestRateStrategyTest {
+@DisplayName("BasicInterestRateStrategy")
+class BasicInterestRateStrategyTest {
 
-  private final InterestRateStrategy strategy = new StudentInterestRateStrategy();
+  private final InterestRateStrategy strategy = new BasicInterestRateStrategy();
 
   @Nested
   @DisplayName("interest()")
@@ -25,7 +25,7 @@ class StudentInterestRateStrategyTest {
     @MethodSource("cases")
     @DisplayName("provides correct interest calculations for given days and balance")
     void interest(final int days, final double balance, final String expectedInterest) {
-      final BigDecimal interest = strategy.interest(new TimeDeposit(1, "student", balance, days));
+      final BigDecimal interest = strategy.interest(new TimeDeposit(1, "basic", balance, days));
 
       assertThat(interest).isEqualByComparingTo(expectedInterest);
     }
@@ -34,12 +34,11 @@ class StudentInterestRateStrategyTest {
       return Stream.of(
         arguments(0, 1200.0, "0.0"),
         arguments(30, 1200.0, "0.0"),
-        arguments(31, 1200.0, "3.0"),
-        arguments(45, 1200.0, "3.0"),
-        arguments(365, 1200.0, "3.0"),
-        arguments(366, 1200.0, "0.0"),
-        arguments(400, 5000.0, "0.0"),
-        arguments(100, 0.0, "0.0"));
+        arguments(31, 1200.0, "1.0"),
+        arguments(45, 1234567.0, "1028.805833333333"),
+        arguments(365, 1200.0, "1.0"),
+        arguments(366, 1200.0, "1.0"),
+        arguments(45, 0.0, "0.0"));
     }
   }
 }
