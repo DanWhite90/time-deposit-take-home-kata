@@ -75,13 +75,6 @@ org.ikigaidigital
 - **Money.** The database stores `NUMERIC(19, 2)` and the API returns `BigDecimal`. Interest is computed in `BigDecimal`
   with a static monthly rate per plan; only `TimeDeposit.balance` stays `Double` for compatibility.
 
-### Assumptions
-
-- Withdrawals are stored and returned but do not affect interest; the original calculation ignores them.
-- `POST` is used for the balance update because it changes state and the client sends no resource.
-- Table and column names keep the assignment's camelCase. They are quoted so PostgreSQL does not fold them.
-- The sample plans ship as a Flyway migration (`V2`) so the endpoints can be tried immediately.
-
 ## Tests
 
 ```sh
