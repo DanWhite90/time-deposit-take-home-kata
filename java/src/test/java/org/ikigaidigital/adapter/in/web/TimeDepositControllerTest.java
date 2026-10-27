@@ -8,24 +8,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
-import org.ikigaidigital.PostgresTestcontainersConfiguration;
+import org.ikigaidigital.IntegrationTest;
 import org.ikigaidigital.TimeDepositTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.web.servlet.MockMvc;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Import({PostgresTestcontainersConfiguration.class, TimeDepositTestData.class})
+@IntegrationTest
 @DisplayName("TimeDepositController")
-@TestConstructor(autowireMode = AutowireMode.ALL)
 @RequiredArgsConstructor
 class TimeDepositControllerTest {
 

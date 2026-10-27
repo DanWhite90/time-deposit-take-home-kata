@@ -6,7 +6,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.ikigaidigital.PostgresTestcontainersConfiguration;
+import org.ikigaidigital.IntegrationTest;
 import org.ikigaidigital.TimeDeposit;
 import org.ikigaidigital.TimeDepositTestData;
 import org.ikigaidigital.application.port.out.TimeDepositStore;
@@ -14,16 +14,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestConstructor;
-import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.transaction.support.TransactionTemplate;
 
-@SpringBootTest
-@Import({PostgresTestcontainersConfiguration.class, TimeDepositTestData.class})
+@IntegrationTest
 @DisplayName("TimeDepositPersistenceAdapter")
-@TestConstructor(autowireMode = AutowireMode.ALL)
 @RequiredArgsConstructor
 class TimeDepositPersistenceAdapterTest {
 
