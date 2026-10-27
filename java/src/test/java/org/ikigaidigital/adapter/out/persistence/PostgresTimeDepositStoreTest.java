@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.ikigaidigital.PostgresTestcontainersConfiguration;
 import org.ikigaidigital.TimeDeposit;
 import org.ikigaidigital.application.port.out.TimeDepositStore;
@@ -12,23 +13,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestConstructor;
+import org.springframework.test.context.TestConstructor.AutowireMode;
 
 @SpringBootTest
 @Import(PostgresTestcontainersConfiguration.class)
 @DisplayName("PostgresTimeDepositStore")
+@TestConstructor(autowireMode = AutowireMode.ALL)
+@RequiredArgsConstructor
 class PostgresTimeDepositStoreTest {
 
-  @Autowired
-  private TimeDepositStore timeDepositStore;
+  private final TimeDepositStore timeDepositStore;
 
-  @Autowired
-  private TimeDepositJpaRepository timeDeposits;
+  private final TimeDepositJpaRepository timeDeposits;
 
-  @Autowired
-  private WithdrawalJpaRepository withdrawals;
+  private final WithdrawalJpaRepository withdrawals;
 
   @BeforeEach
   void clearTables() {

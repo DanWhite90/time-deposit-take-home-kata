@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import lombok.RequiredArgsConstructor;
 import org.ikigaidigital.PostgresTestcontainersConfiguration;
 import org.ikigaidigital.adapter.out.persistence.TimeDepositEntity;
 import org.ikigaidigital.adapter.out.persistence.TimeDepositJpaRepository;
@@ -16,26 +17,26 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
+import org.springframework.test.context.TestConstructor;
+import org.springframework.test.context.TestConstructor.AutowireMode;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(PostgresTestcontainersConfiguration.class)
 @DisplayName("TimeDepositController")
+@TestConstructor(autowireMode = AutowireMode.ALL)
+@RequiredArgsConstructor
 class TimeDepositControllerTest {
 
-  @Autowired
-  private MockMvc mockMvc;
+  private final MockMvc mockMvc;
 
-  @Autowired
-  private TimeDepositJpaRepository timeDeposits;
+  private final TimeDepositJpaRepository timeDeposits;
 
-  @Autowired
-  private WithdrawalJpaRepository withdrawals;
+  private final WithdrawalJpaRepository withdrawals;
 
   @BeforeEach
   void seedStore() {
