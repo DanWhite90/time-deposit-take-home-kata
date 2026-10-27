@@ -26,6 +26,7 @@ Java 25, Spring Boot, hexagonal layout. Run `mvn verify` before claiming a task 
   function and the return statement.
 - Extract constant expressions into static fields.
 - Use `if` guards where possible.
+- Remove dead code in refactors.
 
 ## Java / Spring Boot
 
