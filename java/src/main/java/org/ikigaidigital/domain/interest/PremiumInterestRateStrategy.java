@@ -10,6 +10,7 @@ final class PremiumInterestRateStrategy implements InterestRateStrategy {
 
   private static final int MONTHS_PER_YEAR = 12;
 
+  // Premium starts later than the 30 interest-free days every plan gets.
   private static final int INTEREST_FREE_DAYS = 45;
 
   @Override

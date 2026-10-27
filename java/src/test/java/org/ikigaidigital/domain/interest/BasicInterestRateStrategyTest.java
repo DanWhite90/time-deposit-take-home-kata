@@ -32,8 +32,6 @@ class BasicInterestRateStrategyTest {
 
     private static Stream<Arguments> cases() {
       return Stream.of(
-        arguments(0, 1200.0, "0.0"),
-        arguments(30, 1200.0, "0.0"),
         arguments(31, 1200.0, "1.0"),
         arguments(45, 1234567.0, "1028.81"),
         arguments(365, 1200.0, "1.0"),

@@ -63,7 +63,7 @@ Each `POST` applies one more month of interest, so call it once per month (for e
 org.ikigaidigital
 ├── TimeDeposit, TimeDepositCalculator   original kata API, unchanged package and signatures
 ├── domain/model                         TimeDepositWithWithdrawals, Withdrawal (read model, BigDecimal money)
-├── domain/interest                      InterestRateStrategy per plan + InterestRateStrategyFactory (no Spring)
+├── domain/interest                      InterestRateStrategy per plan, InterestFreePeriod, factory (no Spring)
 ├── application/port/in                  ListTimeDepositsUseCase, UpdateAllTimeDepositBalancesUseCase
 ├── application/port/out                 TimeDepositStore
 ├── application/service                  TimeDepositService (transactions)
@@ -76,9 +76,11 @@ org.ikigaidigital
   balance stays a `Double`. `org.ikigaidigital.TimeDepositCalculator` keeps its public no-arg constructor and
   `updateBalance(List<TimeDeposit>)`. Code written against the original kata compiles unchanged.
 - **Same behavior.** The plan-specific `if` chain became one strategy per plan, picked by a factory. Adding a plan
-  means one new strategy class and one factory case. `TimeDepositCalculatorCharacterizationTest` compares the
-  refactored calculator with a verbatim copy of the original on 20,000 random deposits and requires bit-identical
-  balances, because the assignment states the existing calculation is correct and must not change.
+  means one new strategy class and one factory case. The 30-day rule that applies to every plan lives once, in
+  `InterestFreePeriod`, which the factory wraps around each plan; premium's later start stays in the premium strategy.
+  `TimeDepositCalculatorCharacterizationTest` compares the refactored calculator with a verbatim copy of the original
+  on 20,000 random deposits and requires bit-identical balances, because the assignment states the existing
+  calculation is correct and must not change.
 - **Known flaw, kept on purpose.** The original computes interest in `double`, and the strategies keep that
   arithmetic. An exact half-cent of interest can therefore round either way: a student balance of 45402.00 earns
   113.505, which `double` stores as 113.50499... and rounds down to 113.50. A balance plus interest sum can also be one
