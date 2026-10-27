@@ -74,19 +74,20 @@ org.ikigaidigital
   `updateBalance(List<TimeDeposit>)`. Code written against the original kata compiles unchanged.
 - **Same behavior.** The plan-specific `if` chain became one strategy per plan, picked by a factory. Adding a plan
   means one new strategy class and one factory case. `TimeDepositCalculatorCharacterizationTest` compares the
-  refactored calculator with a verbatim copy of the original on 20,000 random deposits and requires identical
-  balances, with two intended exceptions where the original `double` arithmetic was inexact. Exact half-cent interest
-  (e.g. 113.505) now rounds up, where the original stored 113.50499... and rounded down. The balance plus interest
-  addition is done in `BigDecimal`, so 332763.74 + 831.91 gives 333595.65 instead of the original 333595.64999999997.
-  In the 20,000-deposit run about 2,400 balances change this way, each one closer to the exact result.
-- **Money.** The database stores `NUMERIC(19, 2)` and the API returns `BigDecimal`. Interest is computed in `BigDecimal`
-  with a static annual rate per plan, multiplied first and divided by twelve last, so rounding to cents is the only
-  rounding. The balance addition is in `BigDecimal` too. `Double` survives only as the type of `TimeDeposit.balance`,
-  which the assignment fixes. The one place money crosses a boundary as `Double` is the balance update:
-  `TimeDepositStore.saveBalances` takes the calculator's `List<TimeDeposit>`, because the assignment keeps `TimeDeposit` and `updateBalance` unchanged. The
-  adapter converts each balance straight back with `BigDecimal.valueOf(...)` at scale 2. This is exact for cent amounts
-  up to about 10^13, far above any realistic deposit, so no precision is lost in practice. Without that constraint the
-  port would take `BigDecimal` balances.
+  refactored calculator with a verbatim copy of the original on 20,000 random deposits and requires bit-identical
+  balances, because the assignment states the existing calculation is correct and must not change.
+- **Known flaw, kept on purpose.** The original computes interest in `double`, and the strategies keep that
+  arithmetic. An exact half-cent of interest can therefore round either way: a student balance of 45402.00 earns
+  113.505, which `double` stores as 113.50499... and rounds down to 113.50. A balance plus interest sum can also be one
+  binary digit off, e.g. 333595.64999999997 instead of 333595.65. Computing in `BigDecimal` would fix both. In the
+  20,000-deposit sample that changes about 2,400 in-memory results, but only 4 stored balances, each by one cent.
+  Because it changes existing results, it needs a business decision, so it is left as a follow-up.
+- **Money.** The database stores `NUMERIC(19, 2)`; the read model and the API use `BigDecimal`. The interest
+  calculation is the exception: it keeps the original `double` arithmetic and returns the interest, rounded to cents,
+  as a `BigDecimal`, and `TimeDeposit.balance` stays `Double` as the assignment requires. The balance update therefore
+  crosses the `TimeDepositStore` port as `Double`: `saveBalances` takes the calculator's `List<TimeDeposit>`. The
+  adapter converts each balance straight back with `BigDecimal.valueOf(...)` at scale 2, which is exact for cent
+  amounts up to about 10^13, far above any realistic deposit.
 
 ## Tests
 

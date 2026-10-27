@@ -7,9 +7,9 @@ Java 25, Spring Boot, hexagonal layout. Run `mvn verify` before claiming a task 
 - Leave `TimeDeposit.balance` as `Double`; the assignment model must stay unchanged, including
   `updateBalance(List<TimeDeposit>)`.
 - Keep `org.ikigaidigital.TimeDeposit` and `org.ikigaidigital.TimeDepositCalculator` at their original package with
-  their original public constructors. Refactor behind them; `TimeDepositCalculatorCharacterizationTest` must pass.
-  Balances match the original except where its `double` arithmetic was inexact: exact half-cent interest now rounds
-  half up, and the balance plus interest addition is exact (the original could be one binary digit off).
+  their original public constructors. Refactor behind them; `TimeDepositCalculatorCharacterizationTest` must pass
+  with bit-identical balances. Interest therefore keeps the original `double` arithmetic, including its half-cent
+  rounding flaw; do not switch it to `BigDecimal`.
 - For database keep camelCase table and column names. Quote them so PostgreSQL does not fold them to lowercase.
 
 ## Style
@@ -34,7 +34,7 @@ Java 25, Spring Boot, hexagonal layout. Run `mvn verify` before claiming a task 
 - Keep `@Transactional` on service methods only.
 - Never swallow exceptions.
 - Controllers call services or inbound use cases only, never repositories.
-- Use `BigDecimal` for money.
+- Use `BigDecimal` for money, except inside the interest calculation, which keeps the original `double` arithmetic.
 
 ## Persistence
 

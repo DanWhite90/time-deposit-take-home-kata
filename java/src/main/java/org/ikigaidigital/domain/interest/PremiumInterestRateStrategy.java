@@ -6,16 +6,14 @@ import org.ikigaidigital.TimeDeposit;
 
 final class PremiumInterestRateStrategy implements InterestRateStrategy {
 
-  private static final BigDecimal ANNUAL_RATE = new BigDecimal("0.05");
+  private static final double ANNUAL_RATE = 0.05;
 
-  private static final BigDecimal MONTHS_PER_YEAR = BigDecimal.valueOf(12);
+  private static final int MONTHS_PER_YEAR = 12;
 
   @Override
   public BigDecimal interest(final TimeDeposit deposit) {
     if (deposit.getDays() > 45) {
-      return BigDecimal.valueOf(deposit.getBalance())
-          .multiply(ANNUAL_RATE)
-          .divide(MONTHS_PER_YEAR, 2, RoundingMode.HALF_UP);
+      return new BigDecimal(deposit.getBalance() * ANNUAL_RATE / MONTHS_PER_YEAR).setScale(2, RoundingMode.HALF_UP);
     }
 
     return BigDecimal.ZERO;

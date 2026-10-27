@@ -23,7 +23,8 @@ public class TimeDepositCalculator {
     for (TimeDeposit timeDeposit : timeDeposits) {
       BigDecimal interest = interestRateStrategyFactory.forPlanType(timeDeposit.getPlanType()).interest(timeDeposit);
 
-      timeDeposit.setBalance(BigDecimal.valueOf(timeDeposit.getBalance()).add(interest).doubleValue());
+      // Adds in double, as the original did, so balances stay bit-identical to it.
+      timeDeposit.setBalance(timeDeposit.getBalance() + interest.doubleValue());
     }
   }
 }
