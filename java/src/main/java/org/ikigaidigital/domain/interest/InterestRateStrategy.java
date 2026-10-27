@@ -6,9 +6,8 @@ import org.ikigaidigital.TimeDeposit;
 public interface InterestRateStrategy {
 
   /**
-   * Returns one month of unrounded interest. The monthly rate is a truncated non-terminating decimal (e.g. 0.01 / 12),
-   * so implementations multiply with {@code DECIMAL64}: an exact half-cent like 115.405 stays 115.405 instead of
-   * 115.40499..., and rounding half up to cents gives 115.41.
+   * Returns one month of interest, rounded half up to cents. Implementations multiply by the annual rate first, which
+   * is exact, and divide by twelve last, so rounding to cents is the only rounding.
    */
   BigDecimal interest(TimeDeposit deposit);
 }

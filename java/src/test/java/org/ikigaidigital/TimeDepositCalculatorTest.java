@@ -46,13 +46,15 @@ class TimeDepositCalculatorTest {
         arguments("premium", 45, 1200.0, 1200.0),
         arguments("premium", 46, 1200.0, 1205.0),
         arguments("premium", 366, 1200.0, 1205.0),
-        // Exact half-cent interest rounds half up, despite the truncated monthly rate. The original double
-        // arithmetic rounded the student and premium cases down.
+        // Exact half-cent interest rounds half up. The original double arithmetic rounded the student and
+        // premium cases down.
         arguments("basic", 100, 138486.0, 138601.41),
         arguments("student", 100, 45402.0, 45515.51),
         arguments("student", 100, 177466.0, 177909.67),
         arguments("premium", 100, 1348194.0, 1353811.48),
         arguments("premium", 100, 473955.6, 475930.42),
+        // The balance plus interest addition is exact; the original double sum gave 333595.64999999997.
+        arguments("student", 100, 332763.74, 333595.65),
         arguments("unknown", 100, 1200.0, 1200.0),
         arguments(null, 100, 1200.0, 1200.0));
     }

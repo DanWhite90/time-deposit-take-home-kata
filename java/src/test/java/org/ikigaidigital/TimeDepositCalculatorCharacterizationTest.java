@@ -35,7 +35,7 @@ class TimeDepositCalculatorCharacterizationTest {
   class UpdateBalance {
 
     @Test
-    @DisplayName("produces the same balances as the original implementation, except on exact half-cent interest")
+    @DisplayName("matches the original except where its double arithmetic was inexact")
     void matchesTheOriginalImplementation() {
       Random random = new Random(20260513L);
       List<TimeDeposit> refactored = new ArrayList<>();
@@ -62,23 +62,33 @@ class TimeDepositCalculatorCharacterizationTest {
           continue;
         }
 
-        assertCorrectHalfCentRounding(deposit, startingBalances.get(i));
+        assertMoreAccurateThanTheOriginal(deposit, original.get(i), startingBalances.get(i));
       }
     }
 
     /*
-     * The original computes interest in double, so an exact half-cent such as 113.505 may become 113.50499... and
-     * round down. The refactored calculator uses BigDecimal and rounds it up. Only those ties may differ.
+     * The refactored calculator works in BigDecimal, so it may differ from the original only where the original's
+     * double arithmetic was inexact:
+     * - exact half-cent interest such as 113.505, which the original stored as 113.50499... and rounded down;
+     * - the balance plus interest addition, where the original's double sum can be one binary digit off the exact
+     *   decimal result, e.g. 333595.64999999997 instead of 333595.65.
+     * In both cases the refactored balance must be the double closest to the exact decimal result.
      */
-    private static void assertCorrectHalfCentRounding(final TimeDeposit deposit, final double startingBalance) {
+    private static void assertMoreAccurateThanTheOriginal(
+        final TimeDeposit deposit, final TimeDeposit original, final double startingBalance) {
       BigDecimal exactInterest = BigDecimal.valueOf(startingBalance)
           .multiply(ANNUAL_RATES.get(deposit.getPlanType()))
           .divide(MONTHS_PER_YEAR, 20, RoundingMode.HALF_UP);
-      double expectedBalance = startingBalance + exactInterest.setScale(2, RoundingMode.HALF_UP).doubleValue();
+      double expectedBalance = BigDecimal.valueOf(startingBalance)
+          .add(exactInterest.setScale(2, RoundingMode.HALF_UP))
+          .doubleValue();
+      boolean halfCentTie = exactInterest.remainder(CENT).compareTo(HALF_CENT) == 0;
+      boolean oneBinaryDigitOff = Math.abs(deposit.getBalance() - original.getBalance()) <= Math.ulp(expectedBalance);
 
-      assertThat(exactInterest.remainder(CENT)).as("interest of deposit %d is an exact half-cent", deposit.getId())
-          .isEqualByComparingTo(HALF_CENT);
       assertThat(deposit.getBalance()).as("balance of deposit %d", deposit.getId()).isEqualTo(expectedBalance);
+      assertThat(halfCentTie || oneBinaryDigitOff)
+          .as("deposit %d differs from the original only by a half-cent tie or one binary digit", deposit.getId())
+          .isTrue();
     }
 
     // Mixes cent-precise balances with arbitrary doubles to exercise the rounding edge cases.

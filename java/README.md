@@ -61,7 +61,6 @@ org.ikigaidigital
 ├── TimeDeposit, TimeDepositCalculator   original kata API, unchanged package and signatures
 ├── domain/model                         TimeDepositWithWithdrawals, Withdrawal (read model, BigDecimal money)
 ├── domain/interest                      InterestRateStrategy per plan + InterestRateStrategyFactory (no Spring)
-├── domain/util                          MoneyUtil (rounding to cents, half up)
 ├── application/port/in                  ListTimeDepositsUseCase, UpdateAllTimeDepositBalancesUseCase
 ├── application/port/out                 TimeDepositStore
 ├── application/service                  TimeDepositService (transactions)
@@ -76,10 +75,18 @@ org.ikigaidigital
 - **Same behavior.** The plan-specific `if` chain became one strategy per plan, picked by a factory. Adding a plan
   means one new strategy class and one factory case. `TimeDepositCalculatorCharacterizationTest` compares the
   refactored calculator with a verbatim copy of the original on 20,000 random deposits and requires identical
-  balances. The one intended difference: exact half-cent interest (e.g. 113.505) now rounds up, where the
-  original `double` arithmetic stored 113.50499... and rounded down.
+  balances, with two intended exceptions where the original `double` arithmetic was inexact. Exact half-cent interest
+  (e.g. 113.505) now rounds up, where the original stored 113.50499... and rounded down. The balance plus interest
+  addition is done in `BigDecimal`, so 332763.74 + 831.91 gives 333595.65 instead of the original 333595.64999999997.
+  In the 20,000-deposit run about 2,400 balances change this way, each one closer to the exact result.
 - **Money.** The database stores `NUMERIC(19, 2)` and the API returns `BigDecimal`. Interest is computed in `BigDecimal`
-  with a static monthly rate per plan; only `TimeDeposit.balance` stays `Double` for compatibility.
+  with a static annual rate per plan, multiplied first and divided by twelve last, so rounding to cents is the only
+  rounding. The balance addition is in `BigDecimal` too. `Double` survives only as the type of `TimeDeposit.balance`,
+  which the assignment fixes. The one place money crosses a boundary as `Double` is the balance update:
+  `TimeDepositStore.saveBalances` takes the calculator's `List<TimeDeposit>`, because the assignment keeps `TimeDeposit` and `updateBalance` unchanged. The
+  adapter converts each balance straight back with `BigDecimal.valueOf(...)` at scale 2. This is exact for cent amounts
+  up to about 10^13, far above any realistic deposit, so no precision is lost in practice. Without that constraint the
+  port would take `BigDecimal` balances.
 
 ## Tests
 

@@ -8,8 +8,8 @@ Java 25, Spring Boot, hexagonal layout. Run `mvn verify` before claiming a task 
   `updateBalance(List<TimeDeposit>)`.
 - Keep `org.ikigaidigital.TimeDeposit` and `org.ikigaidigital.TimeDepositCalculator` at their original package with
   their original public constructors. Refactor behind them; `TimeDepositCalculatorCharacterizationTest` must pass.
-  Balances match the original except on exact half-cent interest, which now rounds half up instead of following the
-  original `double` error.
+  Balances match the original except where its `double` arithmetic was inexact: exact half-cent interest now rounds
+  half up, and the balance plus interest addition is exact (the original could be one binary digit off).
 - For database keep camelCase table and column names. Quote them so PostgreSQL does not fold them to lowercase.
 
 ## Style

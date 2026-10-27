@@ -1,17 +1,21 @@
 package org.ikigaidigital.domain.interest;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
+import java.math.RoundingMode;
 import org.ikigaidigital.TimeDeposit;
 
 final class PremiumInterestRateStrategy implements InterestRateStrategy {
 
-  private static final BigDecimal MONTHLY_RATE = new BigDecimal("0.05").divide(BigDecimal.valueOf(12), MathContext.DECIMAL128);
+  private static final BigDecimal ANNUAL_RATE = new BigDecimal("0.05");
+
+  private static final BigDecimal MONTHS_PER_YEAR = BigDecimal.valueOf(12);
 
   @Override
   public BigDecimal interest(final TimeDeposit deposit) {
     if (deposit.getDays() > 45) {
-      return BigDecimal.valueOf(deposit.getBalance()).multiply(MONTHLY_RATE, MathContext.DECIMAL64);
+      return BigDecimal.valueOf(deposit.getBalance())
+          .multiply(ANNUAL_RATE)
+          .divide(MONTHS_PER_YEAR, 2, RoundingMode.HALF_UP);
     }
 
     return BigDecimal.ZERO;

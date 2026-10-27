@@ -1,7 +1,5 @@
 package org.ikigaidigital;
 
-import static org.ikigaidigital.domain.util.MoneyUtil.round;
-
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +23,7 @@ public class TimeDepositCalculator {
     for (TimeDeposit timeDeposit : timeDeposits) {
       BigDecimal interest = interestRateStrategyFactory.forPlanType(timeDeposit.getPlanType()).interest(timeDeposit);
 
-      timeDeposit.setBalance(timeDeposit.getBalance() + round(interest).doubleValue());
+      timeDeposit.setBalance(BigDecimal.valueOf(timeDeposit.getBalance()).add(interest).doubleValue());
     }
   }
 }
