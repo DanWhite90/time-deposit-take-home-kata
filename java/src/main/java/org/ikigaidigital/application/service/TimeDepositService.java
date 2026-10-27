@@ -3,11 +3,11 @@ package org.ikigaidigital.application.service;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.ikigaidigital.TimeDeposit;
+import org.ikigaidigital.TimeDepositCalculator;
 import org.ikigaidigital.application.port.in.ListTimeDepositsUseCase;
 import org.ikigaidigital.application.port.in.UpdateAllTimeDepositBalancesUseCase;
-import org.ikigaidigital.application.port.in.UpdateTimeDepositBalanceUseCase;
 import org.ikigaidigital.application.port.out.TimeDepositStore;
-import org.ikigaidigital.domain.model.TimeDeposit;
 import org.ikigaidigital.domain.model.TimeDepositWithWithdrawals;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ public class TimeDepositService implements ListTimeDepositsUseCase, UpdateAllTim
 
   private final TimeDepositStore timeDepositStore;
 
-  private final UpdateTimeDepositBalanceUseCase updateTimeDepositBalanceUseCase;
+  private final TimeDepositCalculator timeDepositCalculator;
 
   @Override
   @Transactional(readOnly = true)
@@ -35,7 +35,7 @@ public class TimeDepositService implements ListTimeDepositsUseCase, UpdateAllTim
       deposits.add(account.toTimeDeposit());
     }
 
-    updateTimeDepositBalanceUseCase.updateBalance(deposits);
+    timeDepositCalculator.updateBalance(deposits);
     timeDepositStore.saveBalances(deposits);
 
     return timeDepositStore.findAll();

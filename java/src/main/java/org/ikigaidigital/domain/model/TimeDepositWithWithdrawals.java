@@ -3,6 +3,7 @@ package org.ikigaidigital.domain.model;
 import static java.util.Collections.emptyList;
 
 import java.util.List;
+import org.ikigaidigital.TimeDeposit;
 
 public record TimeDepositWithWithdrawals(
     int id,

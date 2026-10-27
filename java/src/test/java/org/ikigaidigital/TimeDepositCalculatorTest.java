@@ -1,11 +1,10 @@
-package org.ikigaidigital.application.service.interest;
+package org.ikigaidigital;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 import java.util.List;
 import java.util.stream.Stream;
-import org.ikigaidigital.domain.model.TimeDeposit;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -15,7 +14,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 @DisplayName("TimeDepositCalculator")
 public class TimeDepositCalculatorTest {
 
-  private final TimeDepositCalculator calculator = new TimeDepositCalculator(new InterestRateStrategyFactory());
+  private final TimeDepositCalculator calculator = new TimeDepositCalculator();
 
   @Nested
   @DisplayName("updateBalance()")

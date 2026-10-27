@@ -1,6 +1,6 @@
 package org.ikigaidigital.application.service.interest;
 
-import org.ikigaidigital.domain.model.TimeDeposit;
+import org.ikigaidigital.TimeDeposit;
 
 public interface InterestRateStrategy {
 
