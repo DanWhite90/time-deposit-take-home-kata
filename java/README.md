@@ -103,8 +103,48 @@ on every push to `main` and every pull request that touches `java/`.
 
 ## AI-assisted development
 
-**Setup.** The project uses [Claude Code](https://claude.com/claude-code) in IntelliJ via the official Claude Code
-plugin. Added `CLAUDE.md` and `AGENTS.md`, for maximum compatibility `AGENTS.md` with other harnesses.
+### Setup
 
-AI was used primarily for boilerplate code, tests and style refactors. A final Claude Code session reviewed the code
-against the assignment and a progressively refined `AGENTS.md`.
+- **Tool:** [Claude Code](https://claude.com/claude-code), used from IntelliJ IDEA through the official Claude Code
+  plugin, with the Claude Opus 5.5 model.
+- **Rules:** [`AGENTS.md`](AGENTS.md) holds all project rules: the assignment constraints, code style, Spring and
+  persistence conventions, the testing style, and running `mvn verify` before a task counts as done.
+  [`CLAUDE.md`](CLAUDE.md) only imports it (`@AGENTS.md`), so Claude Code and any other agent that reads `AGENTS.md`
+  follow the same rules.
+- **Nothing else:** those two files are the whole agent configuration. There is no custom system prompt, hook, MCP
+  server or subagent. Claude Code ran in auto mode, which blocks risky actions such as force-pushes; I ran those
+  myself.
+
+To reproduce the setup, install Claude Code and open this `java` folder in it, from the terminal or the IDE plugin. It
+loads `CLAUDE.md`, and through it `AGENTS.md`, automatically. With JDK 25, Maven and Docker installed, it can run
+`mvn verify` as the rules require.
+
+### Workflow
+
+I worked in small tasks: ask for one change, review the diff, have Claude run `mvn verify`, then commit. When I had to
+correct a recurring mistake, I turned the correction into an `AGENTS.md` rule rather than repeating it, so the rules
+grew with the project; the file's commit history shows each addition. Where a change involved a trade-off, such as
+how to round interest, Claude laid out the options with evidence and I made the call.
+
+### What was AI-assisted, and why
+
+- **Boilerplate:** the Spring Boot, API, persistence and Docker Compose setup. Standard code, quick to check by running
+  it.
+- **Tests:** strategy, calculator, service, API, persistence and OpenAPI tests. Boundary cases get covered fast, and the
+  tests check the generated code.
+- **Behavior safety net:** the characterization test against a verbatim copy of the original calculator, which proves
+  the refactor keeps every balance identical.
+- **Precision analysis:** probes on 20,000 random deposits that found the original's half-cent rounding flaw (see
+  Design). Hunting such edge cases by hand is slow.
+- **Refactors I asked for:** the Spring-free domain package, the persistence adapter rename, the leaner balance update
+  and the dead-code removal. Quick to do, and the tests catch regressions.
+- **Style:** applying the `AGENTS.md` rules across the code. Repetitive, rule-based changes.
+- **Reviews:** checks against the assignment and `AGENTS.md`, an end-to-end run and a build of every commit. A second
+  reviewer that does not skip items.
+- **Commit history:** splitting a large commit and fixing commits that did not compile, so every commit is atomic and
+  builds.
+- **Delivery:** Dockerfile layer caching, the non-root user and the GitHub Actions workflow. Standard practice that is
+  easy to verify.
+
+Decisions stayed with me: Claude proposed and implemented, and I chose between options and reviewed every change
+before committing it. The assumption comments in `TimeDeposit` and `TimeDepositController` are my own.
