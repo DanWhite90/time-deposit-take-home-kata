@@ -106,14 +106,13 @@ on every push to `main` and every pull request that touches `java/`.
 ### Setup
 
 - **Tool:** [Claude Code](https://claude.com/claude-code), used from IntelliJ IDEA through the official Claude Code
-  plugin, with the Claude Opus 5.5 model.
+  plugin, with the Claude Opus 5.5 model with mixed efforts.
 - **Rules:** [`AGENTS.md`](AGENTS.md) holds all project rules: the assignment constraints, code style, Spring and
   persistence conventions, the testing style, and running `mvn verify` before a task counts as done.
   [`CLAUDE.md`](CLAUDE.md) only imports it (`@AGENTS.md`), so Claude Code and any other agent that reads `AGENTS.md`
   follow the same rules.
 - **Nothing else:** those two files are the whole agent configuration. There is no custom system prompt, hook, MCP
-  server or subagent. Claude Code ran in auto mode, which blocks risky actions such as force-pushes; I ran those
-  myself.
+  server or subagent.
 
 To reproduce the setup, install Claude Code and open this `java` folder in it, from the terminal or the IDE plugin. It
 loads `CLAUDE.md`, and through it `AGENTS.md`, automatically. With JDK 25, Maven and Docker installed, it can run
@@ -145,6 +144,3 @@ how to round interest, Claude laid out the options with evidence and I made the 
   builds.
 - **Delivery:** Dockerfile layer caching, the non-root user and the GitHub Actions workflow. Standard practice that is
   easy to verify.
-
-Decisions stayed with me: Claude proposed and implemented, and I chose between options and reviewed every change
-before committing it. The assumption comments in `TimeDeposit` and `TimeDepositController` are my own.
