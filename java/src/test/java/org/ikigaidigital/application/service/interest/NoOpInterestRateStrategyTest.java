@@ -3,6 +3,7 @@ package org.ikigaidigital.application.service.interest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
+import java.math.BigDecimal;
 import java.util.stream.Stream;
 import org.ikigaidigital.TimeDeposit;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ class NoOpInterestRateStrategyTest {
     @MethodSource("cases")
     @DisplayName("provides correct interest calculations for given days and balance")
     void interest(final int days, final double balance) {
-      final double interest = strategy.interest(new TimeDeposit(1, "unknown", balance, days));
+      final BigDecimal interest = strategy.interest(new TimeDeposit(1, "unknown", balance, days));
 
       assertThat(interest).isZero();
     }

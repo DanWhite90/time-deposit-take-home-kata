@@ -1,17 +1,19 @@
 package org.ikigaidigital.application.service.interest;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import org.ikigaidigital.TimeDeposit;
 
 final class BasicInterestRateStrategy implements InterestRateStrategy {
 
-  @Override
-  public double interest(final TimeDeposit deposit) {
-    double interest = 0;
+  private static final BigDecimal MONTHLY_RATE = new BigDecimal("0.01").divide(BigDecimal.valueOf(12), MathContext.DECIMAL128);
 
+  @Override
+  public BigDecimal interest(final TimeDeposit deposit) {
     if (deposit.getDays() > 30) {
-      interest = deposit.getBalance() * 0.01 / 12;
+      return BigDecimal.valueOf(deposit.getBalance()).multiply(MONTHLY_RATE, MathContext.DECIMAL64);
     }
 
-    return interest;
+    return BigDecimal.ZERO;
   }
 }
