@@ -1,5 +1,7 @@
 # Time Deposit Refactoring Kata - Take-Home Assignment
 
+> **Solution:** the Java implementation, with run and Swagger instructions, is in [java/README.md](java/README.md).
+
 ## XA Bank Time Deposit
 
 ### Context
