@@ -53,7 +53,9 @@ public class TimeDepositController {
   Furthermore, there's also no way of computing a fraction of the interest because ideally the TimeDeposit class
   should have stored the date of the deposit and the interest calculation job should have considered the current
   day's excess from the deposit day + interest strategy days gap, to calculate the correct fraction of interest for
-  the month when the interest triggers within a month and only a partial month is paid.
+  the month when the interest triggers within a month and only a partial month is paid. Overlapping calls are not
+  guarded either: depending on timing, the second one overwrites the first or applies interest again. A real job
+  would run as a single instance or lock the rows before reading them.
    */
   @PostMapping("/balances")
   @Operation(
