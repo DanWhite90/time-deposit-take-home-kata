@@ -17,6 +17,12 @@ This builds the app image, starts PostgreSQL 16 and runs the Flyway migrations. 
 `timeDeposits` and `withdrawals` tables and load six sample plans. The app listens on `http://localhost:8080`.
 Set `POSTGRES_PORT` if port 5432 is already taken on your machine.
 
+Each `POST` changes the stored balances. To start again from the sample data, drop the database volume:
+
+```sh
+docker compose down -v
+```
+
 ## Trigger the endpoints with Swagger
 
 1. Open **http://localhost:8080/swagger-ui.html**. The raw contract is at `http://localhost:8080/v3/api-docs`.
