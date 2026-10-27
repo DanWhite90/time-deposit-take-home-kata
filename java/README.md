@@ -67,7 +67,7 @@ org.ikigaidigital
 ├── application/service                  TimeDepositService (transactions)
 ├── config                               DomainConfiguration (registers domain classes as beans)
 ├── adapter/in/web                       TimeDepositController + record DTOs (OpenAPI annotations)
-└── adapter/out/persistence              JPA entities, repositories, TimeDepositPersistenceAdapter
+└── adapter/out/persistence              JPA entities, repository, TimeDepositPersistenceAdapter
 ```
 
 - **No breaking changes.** `org.ikigaidigital.TimeDeposit` keeps its package, constructor and accessors. Its

@@ -35,12 +35,4 @@ public class TimeDepositEntity {
   @OneToMany(mappedBy = "timeDeposit")
   @OrderBy("id")
   private List<WithdrawalEntity> withdrawals = new ArrayList<>();
-
-  // Explicit because Lombok cannot generate a constructor that leaves out the withdrawals collection.
-  public TimeDepositEntity(final Integer id, final String planType, final Integer days, final BigDecimal balance) {
-    this.id = id;
-    this.planType = planType;
-    this.days = days;
-    this.balance = balance;
-  }
 }

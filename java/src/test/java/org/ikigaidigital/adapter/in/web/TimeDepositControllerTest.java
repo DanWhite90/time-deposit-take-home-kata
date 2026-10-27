@@ -5,14 +5,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
 import org.ikigaidigital.PostgresTestcontainersConfiguration;
-import org.ikigaidigital.adapter.out.persistence.TimeDepositEntity;
-import org.ikigaidigital.adapter.out.persistence.TimeDepositJpaRepository;
-import org.ikigaidigital.adapter.out.persistence.WithdrawalEntity;
-import org.ikigaidigital.adapter.out.persistence.WithdrawalJpaRepository;
+import org.ikigaidigital.TimeDepositTestData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -26,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
-@Import(PostgresTestcontainersConfiguration.class)
+@Import({PostgresTestcontainersConfiguration.class, TimeDepositTestData.class})
 @DisplayName("TimeDepositController")
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @RequiredArgsConstructor
@@ -34,20 +30,14 @@ class TimeDepositControllerTest {
 
   private final MockMvc mockMvc;
 
-  private final TimeDepositJpaRepository timeDeposits;
-
-  private final WithdrawalJpaRepository withdrawals;
+  private final TimeDepositTestData testData;
 
   @BeforeEach
   void seedStore() {
-    withdrawals.deleteAll();
-    timeDeposits.deleteAll();
-
-    TimeDepositEntity basic = timeDeposits.save(
-        new TimeDepositEntity(1, "basic", 45, new BigDecimal("1234567.00")));
-
-    withdrawals.save(new WithdrawalEntity(9, basic, new BigDecimal("25.50"), LocalDate.of(2026, 1, 15)));
-    timeDeposits.save(new TimeDepositEntity(2, "basic", 30, new BigDecimal("500.00")));
+    testData.clear();
+    testData.insertTimeDeposit(1, "basic", 45, "1234567.00");
+    testData.insertWithdrawal(9, 1, "25.50", LocalDate.of(2026, 1, 15));
+    testData.insertTimeDeposit(2, "basic", 30, "500.00");
   }
 
   @Nested
