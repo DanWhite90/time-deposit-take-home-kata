@@ -37,14 +37,14 @@ These are the only two API endpoints. Swagger UI and `/v3/api-docs` serve the co
 
 ### Sample data and expected result of one update
 
-| id | plan    | days | balance    | after `POST`  | rule shown                  |
-|----|---------|------|------------|---------------|-----------------------------|
-| 1  | basic   | 45   | 1234567.00 | 1235595.81    | 1% a year, paid monthly     |
-| 2  | basic   | 30   | 5000.00    | 5000.00       | no interest in first 30 days |
-| 3  | student | 200  | 2400.00    | 2406.00       | 3% a year                   |
-| 4  | student | 366  | 2400.00    | 2400.00       | no interest after one year  |
-| 5  | premium | 45   | 12000.00   | 12000.00      | interest starts after 45 days |
-| 6  | premium | 90   | 12000.00   | 12050.00      | 5% a year                   |
+| id | plan    | days | balance    | after `POST` | rule shown                    |
+|----|---------|------|------------|--------------|-------------------------------|
+| 1  | basic   | 45   | 1234567.00 | 1235595.81   | 1% a year, paid monthly       |
+| 2  | basic   | 30   | 5000.00    | 5000.00      | no interest in first 30 days  |
+| 3  | student | 200  | 2400.00    | 2406.00      | 3% a year                     |
+| 4  | student | 366  | 2400.00    | 2400.00      | no interest after one year    |
+| 5  | premium | 45   | 12000.00   | 12000.00     | interest starts after 45 days |
+| 6  | premium | 90   | 12000.00   | 12050.00     | 5% a year                     |
 
 Each `POST` applies one more month of interest, so call it once per month (for example from a scheduler).
 
@@ -54,13 +54,14 @@ Each `POST` applies one more month of interest, so call it once per month (for e
 org.ikigaidigital
 ├── TimeDeposit, TimeDepositCalculator   original kata API, unchanged package and signatures
 ├── domain/model                         TimeDepositWithWithdrawals, Withdrawal (read model, BigDecimal money)
-├── domain/util                          MoneyUtil (the original rounding)
+├── domain/interest                      InterestRateStrategy per plan + InterestRateStrategyFactory (no Spring)
+├── domain/util                          MoneyUtil (rounding to cents, half up)
 ├── application/port/in                  ListTimeDepositsUseCase, UpdateAllTimeDepositBalancesUseCase
 ├── application/port/out                 TimeDepositStore
 ├── application/service                  TimeDepositService (transactions)
-├── application/service/interest         InterestRateStrategy per plan + InterestRateStrategyFactory
+├── config                               DomainConfiguration (registers domain classes as beans)
 ├── adapter/in/web                       TimeDepositController + record DTOs (OpenAPI annotations)
-└── adapter/out/persistence              JPA entities, repositories, PostgresTimeDepositStore
+└── adapter/out/persistence              JPA entities, repositories, TimeDepositPersistenceAdapter
 ```
 
 - **No breaking changes.** `org.ikigaidigital.TimeDeposit` keeps its package, constructor and accessors. Its
@@ -68,15 +69,14 @@ org.ikigaidigital
   `updateBalance(List<TimeDeposit>)`. Code written against the original kata compiles unchanged.
 - **Same behavior.** The plan-specific `if` chain became one strategy per plan, picked by a factory. Adding a plan
   means one new strategy class and one factory case. `TimeDepositCalculatorCharacterizationTest` compares the
-  refactored calculator with a verbatim copy of the original on 20,000 random deposits and requires bit-identical
-  balances.
-- **Money.** The database stores `NUMERIC(19, 2)` and the API returns `BigDecimal`. The interest itself is still
-  computed in `double`, because changing that would change results.
+  refactored calculator with a verbatim copy of the original on 20,000 random deposits and requires identical
+  balances. The one intended difference: exact half-cent interest (e.g. 113.505) now rounds up, where the
+  original `double` arithmetic stored 113.50499... and rounded down.
+- **Money.** The database stores `NUMERIC(19, 2)` and the API returns `BigDecimal`. Interest is computed in `BigDecimal`
+  with a static monthly rate per plan; only `TimeDeposit.balance` stays `Double` for compatibility.
 
 ### Assumptions
 
-- An unknown plan type earns no interest, as in the original code. A `null` plan type also earns none: the original
-  threw a `NullPointerException` after 30 days, and invalid input is out of scope.
 - Withdrawals are stored and returned but do not affect interest; the original calculation ignores them.
 - `POST` is used for the balance update because it changes state and the client sends no resource.
 - Table and column names keep the assignment's camelCase. They are quoted so PostgreSQL does not fold them.
@@ -93,24 +93,8 @@ and API tests. Unit tests cover each strategy, the factory and the calculator.
 
 ## AI-assisted development
 
-**Setup.** The project uses [Claude Code](https://claude.com/claude-code). `CLAUDE.md` imports `AGENTS.md`, so the
-same rules also work with other agents that read `AGENTS.md`. The rules cover:
+**Setup.** The project uses [Claude Code](https://claude.com/claude-code) in IntelliJ via the official Claude Code
+plugin. Added `CLAUDE.md` and `AGENTS.md`, for maximum compatibility `AGENTS.md` with other harnesses.
 
-- the assignment constraints (unchanged `TimeDeposit` and calculator API, quoted camelCase names),
-- style (constructor injection, record DTOs, `final`, limited Lombok, SLF4J, `BigDecimal` for money),
-- architecture (hexagonal ports, `@Transactional` on service methods only, Flyway owns DDL),
-- testing (`@DisplayName` with `@Nested`), and running `mvn verify` before a task counts as done.
-
-To reproduce, open this folder in Claude Code; it loads the rules automatically.
-
-**Review pass.** A final Claude Code session reviewed the code against the assignment and `AGENTS.md`. It:
-
-- restored the original `TimeDeposit` / `TimeDepositCalculator` package and the no-arg constructor,
-- added the characterization test,
-- switched money in the read model and API to `BigDecimal`,
-- fixed final fields on the JPA entity and `@Transactional` on the repository,
-- moved the tests to constructor injection,
-- added sample data and this README.
-
-<!-- TODO(author): summarize which parts of the solution were AI-assisted during development and why, and list any
-other tools used. -->
+AI was used primarily for boilerplate code, tests and style refactors. A final Claude Code session reviewed the code
+against the assignment and a progressively refined `AGENTS.md`.

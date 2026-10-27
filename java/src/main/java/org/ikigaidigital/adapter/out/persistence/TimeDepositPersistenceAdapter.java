@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PostgresTimeDepositStore implements TimeDepositStore {
+public class TimeDepositPersistenceAdapter implements TimeDepositStore {
 
   private final TimeDepositJpaRepository timeDeposits;
 

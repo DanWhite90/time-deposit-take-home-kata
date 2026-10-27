@@ -21,10 +21,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 
 @SpringBootTest
 @Import(PostgresTestcontainersConfiguration.class)
-@DisplayName("PostgresTimeDepositStore")
+@DisplayName("TimeDepositPersistenceAdapter")
 @TestConstructor(autowireMode = AutowireMode.ALL)
 @RequiredArgsConstructor
-class PostgresTimeDepositStoreTest {
+class TimeDepositPersistenceAdapterTest {
 
   private final TimeDepositStore timeDepositStore;
 
