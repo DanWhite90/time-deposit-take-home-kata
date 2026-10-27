@@ -15,6 +15,8 @@ public final class InterestRateStrategyFactory {
       case "basic" -> basic;
       case "student" -> student;
       case "premium" -> premium;
+      // Assumption: unknown plans earn no interest, as in the original. The original threw a
+      // NullPointerException for a null plan after 30 days; invalid input is out of scope, so null earns none too.
       case null, default -> noOp;
     };
   }
