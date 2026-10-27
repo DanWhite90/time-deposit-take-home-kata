@@ -25,7 +25,7 @@ class NoOpInterestRateStrategyTest {
     @MethodSource("cases")
     @DisplayName("provides correct interest calculations for given days and balance")
     void interest(final int days, final double balance) {
-      final BigDecimal interest = strategy.interest(new TimeDeposit(1, "unknown", balance, days));
+      BigDecimal interest = strategy.interest(new TimeDeposit(1, "unknown", balance, days));
 
       assertThat(interest).isZero();
     }

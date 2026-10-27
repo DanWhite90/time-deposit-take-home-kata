@@ -31,13 +31,13 @@ public class TimeDepositPersistenceAdapter implements TimeDepositStore {
 
   @Override
   public void saveBalances(final List<TimeDeposit> deposits) {
-    for (final TimeDeposit deposit : deposits) {
+    for (TimeDeposit deposit : deposits) {
       timeDeposits.updateBalance(deposit.getId(), money(deposit.getBalance()));
     }
   }
 
   private TimeDepositWithWithdrawals toDomain(final TimeDepositEntity deposit) {
-    final List<Withdrawal> withdrawals = deposit.getWithdrawals().stream()
+    List<Withdrawal> withdrawals = deposit.getWithdrawals().stream()
         .map(withdrawal -> new Withdrawal(
             withdrawal.getId(),
             deposit.getId(),

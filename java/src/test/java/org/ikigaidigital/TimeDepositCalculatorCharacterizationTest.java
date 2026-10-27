@@ -37,15 +37,15 @@ class TimeDepositCalculatorCharacterizationTest {
     @Test
     @DisplayName("produces the same balances as the original implementation, except on exact half-cent interest")
     void matchesTheOriginalImplementation() {
-      final Random random = new Random(20260513L);
-      final List<TimeDeposit> refactored = new ArrayList<>();
-      final List<TimeDeposit> original = new ArrayList<>();
-      final List<Double> startingBalances = new ArrayList<>();
+      Random random = new Random(20260513L);
+      List<TimeDeposit> refactored = new ArrayList<>();
+      List<TimeDeposit> original = new ArrayList<>();
+      List<Double> startingBalances = new ArrayList<>();
 
       for (int id = 0; id < DEPOSITS; id++) {
-        final String planType = PLAN_TYPES[random.nextInt(PLAN_TYPES.length)];
-        final int days = random.nextInt(800);
-        final double balance = randomBalance(random);
+        String planType = PLAN_TYPES[random.nextInt(PLAN_TYPES.length)];
+        int days = random.nextInt(800);
+        double balance = randomBalance(random);
 
         refactored.add(new TimeDeposit(id, planType, balance, days));
         original.add(new TimeDeposit(id, planType, balance, days));
@@ -56,7 +56,7 @@ class TimeDepositCalculatorCharacterizationTest {
       new OriginalTimeDepositCalculator().updateBalance(original);
 
       for (int i = 0; i < DEPOSITS; i++) {
-        final TimeDeposit deposit = refactored.get(i);
+        TimeDeposit deposit = refactored.get(i);
 
         if (deposit.getBalance().equals(original.get(i).getBalance())) {
           continue;
@@ -71,10 +71,10 @@ class TimeDepositCalculatorCharacterizationTest {
      * round down. The refactored calculator uses BigDecimal and rounds it up. Only those ties may differ.
      */
     private static void assertCorrectHalfCentRounding(final TimeDeposit deposit, final double startingBalance) {
-      final BigDecimal exactInterest = BigDecimal.valueOf(startingBalance)
+      BigDecimal exactInterest = BigDecimal.valueOf(startingBalance)
           .multiply(ANNUAL_RATES.get(deposit.getPlanType()))
           .divide(MONTHS_PER_YEAR, 20, RoundingMode.HALF_UP);
-      final double expectedBalance = startingBalance + exactInterest.setScale(2, RoundingMode.HALF_UP).doubleValue();
+      double expectedBalance = startingBalance + exactInterest.setScale(2, RoundingMode.HALF_UP).doubleValue();
 
       assertThat(exactInterest.remainder(CENT)).as("interest of deposit %d is an exact half-cent", deposit.getId())
           .isEqualByComparingTo(HALF_CENT);
@@ -83,7 +83,7 @@ class TimeDepositCalculatorCharacterizationTest {
 
     // Mixes cent-precise balances with arbitrary doubles to exercise the rounding edge cases.
     private static double randomBalance(final Random random) {
-      final double balance = random.nextDouble() * 2_000_000;
+      double balance = random.nextDouble() * 2_000_000;
 
       return random.nextBoolean() ? Math.round(balance * 100) / 100.0 : balance;
     }

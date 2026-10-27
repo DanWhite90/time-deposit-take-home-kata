@@ -25,7 +25,7 @@ class TimeDepositCalculatorTest {
     @DisplayName("Calculates correct new balance for given plan type and days")
     void updateBalanceRoundsEachStrategy(
         final String planType, final int days, final double balance, final double expectedBalance) {
-      final TimeDeposit deposit = new TimeDeposit(1, planType, balance, days);
+      TimeDeposit deposit = new TimeDeposit(1, planType, balance, days);
 
       calculator.updateBalance(List.of(deposit));
 

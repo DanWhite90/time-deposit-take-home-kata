@@ -25,7 +25,7 @@ class PremiumInterestRateStrategyTest {
     @MethodSource("cases")
     @DisplayName("provides correct interest calculations for given days and balance")
     void interest(final int days, final double balance, final String expectedInterest) {
-      final BigDecimal interest = strategy.interest(new TimeDeposit(1, "premium", balance, days));
+      BigDecimal interest = strategy.interest(new TimeDeposit(1, "premium", balance, days));
 
       assertThat(interest).isEqualByComparingTo(expectedInterest);
     }

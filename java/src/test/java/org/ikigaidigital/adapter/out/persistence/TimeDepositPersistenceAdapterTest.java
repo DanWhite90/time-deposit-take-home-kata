@@ -48,7 +48,7 @@ class TimeDepositPersistenceAdapterTest {
     @Test
     @DisplayName("returns plans with their withdrawals")
     void findAllReturnsPlansWithTheirWithdrawals() {
-      final TimeDepositEntity deposit = timeDeposits.save(
+      TimeDepositEntity deposit = timeDeposits.save(
           new TimeDepositEntity(1, "student", 31, new BigDecimal("1200.00")));
 
       withdrawals.save(new WithdrawalEntity(4, deposit, new BigDecimal("10.00"), LocalDate.of(2026, 3, 1)));
@@ -75,7 +75,7 @@ class TimeDepositPersistenceAdapterTest {
     @Test
     @DisplayName("returns plans ordered by id as the calculator model")
     void findAllTimeDepositsReturnsPlansOrderedById() {
-      final TimeDepositEntity deposit = timeDeposits.save(
+      TimeDepositEntity deposit = timeDeposits.save(
           new TimeDepositEntity(2, "premium", 46, new BigDecimal("1200.00")));
 
       timeDeposits.save(new TimeDepositEntity(1, "basic", 31, new BigDecimal("999.99")));
@@ -94,7 +94,7 @@ class TimeDepositPersistenceAdapterTest {
     @Test
     @DisplayName("updates the balance and leaves the withdrawal")
     void saveBalancesUpdatesTheBalanceAndLeavesTheWithdrawal() {
-      final TimeDepositEntity deposit = timeDeposits.save(
+      TimeDepositEntity deposit = timeDeposits.save(
           new TimeDepositEntity(1, "basic", 45, new BigDecimal("1000.00")));
 
       withdrawals.save(new WithdrawalEntity(4, deposit, new BigDecimal("10.00"), LocalDate.of(2026, 3, 1)));

@@ -22,7 +22,7 @@ public class TimeDepositCalculator {
   }
 
   public void updateBalance(final List<TimeDeposit> timeDeposits) {
-    for (final TimeDeposit timeDeposit : timeDeposits) {
+    for (TimeDeposit timeDeposit : timeDeposits) {
       BigDecimal interest = interestRateStrategyFactory.forPlanType(timeDeposit.getPlanType()).interest(timeDeposit);
 
       timeDeposit.setBalance(timeDeposit.getBalance() + round(interest).doubleValue());

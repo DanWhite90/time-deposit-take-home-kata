@@ -43,7 +43,7 @@ class TimeDepositControllerTest {
     withdrawals.deleteAll();
     timeDeposits.deleteAll();
 
-    final TimeDepositEntity basic = timeDeposits.save(
+    TimeDepositEntity basic = timeDeposits.save(
         new TimeDepositEntity(1, "basic", 45, new BigDecimal("1234567.00")));
 
     withdrawals.save(new WithdrawalEntity(9, basic, new BigDecimal("25.50"), LocalDate.of(2026, 1, 15)));
