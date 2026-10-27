@@ -7,7 +7,8 @@ Java 25, Spring Boot, hexagonal layout. Run `mvn verify` before claiming a task 
 - Leave `TimeDeposit.balance` as `Double`; the assignment model must stay unchanged, including
   `updateBalance(List<TimeDeposit>)`.
 - Keep `org.ikigaidigital.TimeDeposit` and `org.ikigaidigital.TimeDepositCalculator` at their original package with
-  their original public constructors. Refactor behind them; `TimeDepositCalculatorCharacterizationTest` must pass.
+  their original public constructors. Refactor behind them; `TimeDepositCalculatorCharacterizationTest` must pass. Balances match the original
+  except on exact half-cent interest, which now rounds half up instead of following the original `double` error.
 - For database keep camelCase table and column names. Quote them so PostgreSQL does not fold them to lowercase.
 
 ## Style
@@ -21,6 +22,8 @@ Java 25, Spring Boot, hexagonal layout. Run `mvn verify` before claiming a task 
 - Use Lombok `*ArgsConstructor` annotations instead of explicit constructor definitions where possible.
 - In functions bodies keep a blank line between initial variable declarations, ifs and loops, the main body of the 
   function and the return statement. 
+- Extract constant expressions into static fields.
+- Use `if` guards where possible.
 
 ## Java / Spring Boot
 
