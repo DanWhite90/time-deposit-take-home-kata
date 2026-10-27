@@ -4,11 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-
-/* Shared assignment model. It keeps its original package, constructor and accessors so existing callers compile
-unchanged. Lombok generates the same public API as the original hand-written class. I used Lombok instead of a record
-only to avoid breaking changes: I assume the class is a shared model across repos and services. Ideally I would have
-made it immutable with toBuilder() logic. */
+/* Given the refactoring constraints at point 4 of the assignment, moving or changing this class would be a breaking
+change. I kept it here with same package and cleaned the definition using the equivalent Lombok annotations,
+generating the exact same logic. Ideally this could have been a record (immutable). The balance should have been a
+BigDecimal, to compensate all other operations on money are made using BigDecimal.
+ */
 @Getter
 @AllArgsConstructor
 public class TimeDeposit {
