@@ -32,6 +32,7 @@ public class TimeDepositController {
 
   private final UpdateAllTimeDepositBalancesUseCase updateAllTimeDepositBalancesUseCase;
 
+  // this assumes little data and no scaling. it would otherwise require more efficient querying and pagination.
   @GetMapping
   @Operation(operationId = "listTimeDeposits", summary = "Retrieve all time deposits")
   @ApiResponse(
@@ -46,6 +47,7 @@ public class TimeDepositController {
         .toList();
   }
 
+  // This is a non-idempotent operation so it's assumed this is called monthly by a job
   @PostMapping("/balances")
   @Operation(
       operationId = "updateTimeDepositBalances",
