@@ -2,13 +2,14 @@ package org.ikigaidigital.domain.model;
 
 import static java.util.Collections.emptyList;
 
+import java.math.BigDecimal;
 import java.util.List;
 import org.ikigaidigital.TimeDeposit;
 
 public record TimeDepositWithWithdrawals(
     int id,
     String planType,
-    Double balance,
+    BigDecimal balance,
     int days,
     List<Withdrawal> withdrawals) {
 
@@ -16,11 +17,8 @@ public record TimeDepositWithWithdrawals(
     withdrawals = withdrawals == null ? emptyList() : List.copyOf(withdrawals);
   }
 
+  // The shared TimeDeposit model keeps its Double balance, so the conversion happens only at this boundary.
   public TimeDeposit toTimeDeposit() {
-    return new TimeDeposit(id, planType, balance, days);
-  }
-
-  public TimeDepositWithWithdrawals withBalance(Double updatedBalance) {
-    return new TimeDepositWithWithdrawals(id, planType, updatedBalance, days, withdrawals);
+    return new TimeDeposit(id, planType, balance.doubleValue(), days);
   }
 }

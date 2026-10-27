@@ -33,14 +33,14 @@ public class PostgresTimeDepositStore implements TimeDepositStore {
         .map(withdrawal -> new Withdrawal(
             withdrawal.getId(),
             deposit.getId(),
-            withdrawal.getAmount().doubleValue(),
+            withdrawal.getAmount(),
             withdrawal.getDate()))
         .toList();
 
     return new TimeDepositWithWithdrawals(
         deposit.getId(),
         deposit.getPlanType(),
-        deposit.getBalance().doubleValue(),
+        deposit.getBalance(),
         deposit.getDays(),
         withdrawals);
   }

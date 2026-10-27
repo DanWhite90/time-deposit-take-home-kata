@@ -1,6 +1,7 @@
 package org.ikigaidigital.adapter.in.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
 import java.util.List;
 import org.ikigaidigital.domain.model.TimeDepositWithWithdrawals;
 
@@ -8,7 +9,7 @@ import org.ikigaidigital.domain.model.TimeDepositWithWithdrawals;
 public record TimeDepositDto(
     @Schema(example = "1") int id,
     @Schema(example = "basic") String planType,
-    @Schema(example = "1000.0") Double balance,
+    @Schema(example = "1000.00") BigDecimal balance,
     @Schema(example = "45") int days,
     List<WithdrawalDto> withdrawals) {
 

@@ -1,6 +1,7 @@
 package org.ikigaidigital.adapter.in.web.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.ikigaidigital.domain.model.Withdrawal;
 
@@ -8,7 +9,7 @@ import org.ikigaidigital.domain.model.Withdrawal;
 public record WithdrawalDto(
     @Schema(example = "9") int id,
     @Schema(example = "1") int timeDepositId,
-    @Schema(example = "25.5") Double amount,
+    @Schema(example = "25.50") BigDecimal amount,
     @Schema(format = "date", example = "2026-01-15") LocalDate date) {
 
   static WithdrawalDto from(final Withdrawal withdrawal) {
