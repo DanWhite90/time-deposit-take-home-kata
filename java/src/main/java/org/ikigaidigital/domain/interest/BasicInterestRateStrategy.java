@@ -10,9 +10,11 @@ final class BasicInterestRateStrategy implements InterestRateStrategy {
 
   private static final int MONTHS_PER_YEAR = 12;
 
+  private static final int INTEREST_FREE_DAYS = 30;
+
   @Override
   public BigDecimal interest(final TimeDeposit deposit) {
-    if (deposit.getDays() > 30) {
+    if (deposit.getDays() > INTEREST_FREE_DAYS) {
       return new BigDecimal(deposit.getBalance() * ANNUAL_RATE / MONTHS_PER_YEAR).setScale(2, RoundingMode.HALF_UP);
     }
 

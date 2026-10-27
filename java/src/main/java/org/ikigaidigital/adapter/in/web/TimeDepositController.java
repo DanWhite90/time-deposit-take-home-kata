@@ -32,7 +32,7 @@ public class TimeDepositController {
 
   private final UpdateAllTimeDepositBalancesUseCase updateAllTimeDepositBalancesUseCase;
 
-  // this assumes little data and no scaling. it would otherwise require more efficient querying and pagination.
+  // This assumes little data and no scaling. It would otherwise require more efficient querying and pagination.
   @GetMapping
   @Operation(operationId = "listTimeDeposits", summary = "Retrieve all time deposits")
   @ApiResponse(

@@ -55,7 +55,11 @@ public class TimeDepositPersistenceAdapter implements TimeDepositStore {
 
   // The shared TimeDeposit model keeps its Double balance, so the conversion happens only at this boundary.
   private TimeDeposit toTimeDeposit(final TimeDepositEntity deposit) {
-    return new TimeDeposit(deposit.getId(), deposit.getPlanType(), deposit.getBalance().doubleValue(), deposit.getDays());
+    return new TimeDeposit(
+        deposit.getId(),
+        deposit.getPlanType(),
+        deposit.getBalance().doubleValue(),
+        deposit.getDays());
   }
 
   private static BigDecimal money(final Double amount) {
