@@ -88,7 +88,10 @@ mvn verify
 ```
 
 Requires JDK 25+, Maven and a running Docker daemon: Testcontainers starts `postgres:16-alpine` for the persistence
-and API tests. Unit tests cover each strategy, the factory and the calculator.
+and API tests. Unit tests cover each strategy, the factory, the calculator and the service.
+
+GitHub Actions (`.github/workflows/java.yml` at the repository root) runs `mvn verify` and builds the Docker image
+on every push to `main` and every pull request that touches `java/`.
 
 ## AI-assisted development
 
