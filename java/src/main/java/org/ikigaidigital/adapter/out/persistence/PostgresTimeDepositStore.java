@@ -22,14 +22,14 @@ public class PostgresTimeDepositStore implements TimeDepositStore {
   }
 
   @Override
-  public void saveBalances(List<TimeDeposit> deposits) {
-    for (TimeDeposit deposit : deposits) {
+  public void saveBalances(final List<TimeDeposit> deposits) {
+    for (final TimeDeposit deposit : deposits) {
       timeDeposits.updateBalance(deposit.getId(), money(deposit.getBalance()));
     }
   }
 
-  private TimeDepositWithWithdrawals toDomain(TimeDepositEntity deposit) {
-    List<Withdrawal> withdrawals = deposit.getWithdrawals().stream()
+  private TimeDepositWithWithdrawals toDomain(final TimeDepositEntity deposit) {
+    final List<Withdrawal> withdrawals = deposit.getWithdrawals().stream()
         .map(withdrawal -> new Withdrawal(
             withdrawal.getId(),
             deposit.getId(),
@@ -45,7 +45,7 @@ public class PostgresTimeDepositStore implements TimeDepositStore {
         withdrawals);
   }
 
-  private static BigDecimal money(Double amount) {
+  private static BigDecimal money(final Double amount) {
     return BigDecimal.valueOf(amount).setScale(2, RoundingMode.HALF_UP);
   }
 }

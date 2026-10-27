@@ -29,9 +29,9 @@ public class TimeDepositService implements ListTimeDepositsUseCase, UpdateAllTim
   @Override
   @Transactional
   public List<TimeDepositWithWithdrawals> updateAllBalances() {
-    List<TimeDeposit> deposits = new ArrayList<>();
+    final List<TimeDeposit> deposits = new ArrayList<>();
 
-    for (TimeDepositWithWithdrawals account : timeDepositStore.findAll()) {
+    for (final TimeDepositWithWithdrawals account : timeDepositStore.findAll()) {
       deposits.add(account.toTimeDeposit());
     }
 

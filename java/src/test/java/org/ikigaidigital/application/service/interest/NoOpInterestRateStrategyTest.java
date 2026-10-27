@@ -23,8 +23,8 @@ class NoOpInterestRateStrategyTest {
     @ParameterizedTest(name = "at {0} days with balance {1}")
     @MethodSource("cases")
     @DisplayName("provides correct interest calculations for given days and balance")
-    void interest(int days, double balance) {
-      double interest = strategy.interest(new TimeDeposit(1, "unknown", balance, days));
+    void interest(final int days, final double balance) {
+      final double interest = strategy.interest(new TimeDeposit(1, "unknown", balance, days));
 
       assertThat(interest).isZero();
     }

@@ -45,7 +45,7 @@ class InterestRateStrategyFactoryTest {
     @ParameterizedTest(name = "unrecognized plan type \"{0}\"")
     @MethodSource("unrecognizedPlanTypes")
     @DisplayName("uses the no-op singleton for an unrecognized plan type")
-    void unrecognizedPlanTypesUseTheNoOpSingleton(String planType) {
+    void unrecognizedPlanTypesUseTheNoOpSingleton(final String planType) {
       assertThat(factory.forPlanType(planType))
           .isSameAs(factory.forPlanType("unknown"))
           .isInstanceOf(NoOpInterestRateStrategy.class);

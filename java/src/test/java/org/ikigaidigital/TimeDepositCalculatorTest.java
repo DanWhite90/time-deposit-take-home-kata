@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 @DisplayName("TimeDepositCalculator")
-public class TimeDepositCalculatorTest {
+class TimeDepositCalculatorTest {
 
   private final TimeDepositCalculator calculator = new TimeDepositCalculator();
 
@@ -23,8 +23,9 @@ public class TimeDepositCalculatorTest {
     @ParameterizedTest(name = "{0} at {1} days with balance {2} becomes {3}")
     @MethodSource("provideInputDepositsAndExpectedBalances")
     @DisplayName("Calculates correct new balance for given plan type and days")
-    void updateBalance_roundsEachStrategy(String planType, int days, double balance, double expectedBalance) {
-      TimeDeposit deposit = new TimeDeposit(1, planType, balance, days);
+    void updateBalanceRoundsEachStrategy(
+        final String planType, final int days, final double balance, final double expectedBalance) {
+      final TimeDeposit deposit = new TimeDeposit(1, planType, balance, days);
 
       calculator.updateBalance(List.of(deposit));
 
