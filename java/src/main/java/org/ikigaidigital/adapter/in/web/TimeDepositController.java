@@ -47,7 +47,10 @@ public class TimeDepositController {
         .toList();
   }
 
-  // This is a non-idempotent operation so it's assumed this is called monthly by a job
+  /* This is a non-idempotent operation, it assumes the endpoint is called once monthly as a background job. Also
+  there is an implicit assumption that some other job will advance days, as there's no mechanism to enforce the
+  correct timing of the interest calculation. Nothing changes the `days` variable.
+   */
   @PostMapping("/balances")
   @Operation(
       operationId = "updateTimeDepositBalances",
